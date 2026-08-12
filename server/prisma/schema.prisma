@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  mobile     String
+  email      String
+  profession String?
+  city       String?
+  state      String?
+  createdAt  DateTime @default(now())
+  pledges    Pledge[]
+
+  @@map("users")
+}
+
+model Campaign {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  description         String?  @db.Text
+  logo                String?
+  certificateTemplate String?
+  donationEnabled     Boolean  @default(true)
+  status              String   @default("active") // active, inactive
+  pledges             Pledge[]
+
+  @@map("campaigns")
+}
+
+model Pledge {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  campaignId   Int
+  pledgeText   String?       @db.Text
+  language     String        @default("english") // english, hindi, marathi
+  pledgeDate   DateTime      @default(now())
+  status       String        @default("completed")
+  
+  user         User          @relation(fields: [userId], references: [id])
+  campaign     Campaign      @relation(fields: [campaignId], references: [id])
+  certificates Certificate[]
+  donations    Donation[]
+
+  @@map("pledges")
+}
+
+model Certificate {
+  id                Int      @id @default(autoincrement())
+  pledgeId          Int
+  certificateNumber String   @unique
+  pdfPath           String?
+  verificationToken String   @unique
+  generatedAt       DateTime @default(now())
+  emailStatus       String   @default("pending") // pending, sent, failed
+
+  pledge Pledge @relation(fields: [pledgeId], references: [id])
+
+  @@map("certificates")
+}
+
+model Donation {
+  id             Int       @id @default(autoincrement())
+  pledgeId       Int
+  amount         Float
+  transactionId  String?
+  paymentGateway String    @default("payu")
+  paymentStatus  String    @default("pending") // pending, success, failed
+  paymentDate    DateTime?
+
+  pledge Pledge @relation(fields: [pledgeId], references: [id])
+
+  @@map("donations")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  role         String   @default("campaign_manager") // super_admin, campaign_manager, finance_admin, content_admin
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admin_users")
+}
+
+model SiteConfig {
+  id                Int      @id @default(1)
+  donationUsage     String?  @db.Text
+  pledgeEnglish     String?  @db.Text
+  pledgeHindi       String?  @db.Text
+  pledgeMarathi     String?  @db.Text
+  certificateFormat String?  @db.Text
+  updatedAt         DateTime @default(now()) @updatedAt
+
+  @@map("site_configs")
+}
