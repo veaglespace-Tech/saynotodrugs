@@ -9,7 +9,9 @@ import {
   useGetConfigQuery
 } from '../../redux/api/apiSlice';
 
-export default function PledgePage() {
+import { Suspense } from 'react';
+
+function PledgeContent() {
   const searchParams = useSearchParams();
   const campaignId = searchParams.get('campaignId') || 1;
   
@@ -133,13 +135,13 @@ export default function PledgePage() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 py-12">
-        <div className="max-w-xl w-full bg-[#111] rounded-3xl shadow-2xl shadow-rose-900/20 overflow-hidden border border-white/10">
-          <div className="bg-gradient-to-br from-rose-600 to-rose-900 p-8 text-center text-white relative overflow-hidden">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
+        <div className="max-w-xl w-full bg-white rounded-3xl shadow-2xl shadow-orange-900/20 overflow-hidden border border-slate-300">
+          <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-emerald-600 p-8 text-center text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
             <HeartHandshake className="mx-auto h-16 w-16 mb-4 relative z-10 drop-shadow-md" />
             <h2 className="text-3xl font-black tracking-tight mb-2 relative z-10">Support the Cause</h2>
-            <p className="text-rose-100 font-medium relative z-10">Your pledge has been recorded. You can optionally support our on-ground initiatives.</p>
+            <p className="text-orange-100 font-medium relative z-10">Your pledge has been recorded. You can optionally support our on-ground initiatives.</p>
           </div>
           
           <div className="p-8">
@@ -161,8 +163,8 @@ export default function PledgePage() {
                   onClick={() => { setDonationAmount(amt); setCustomAmount(''); }}
                   className={`py-3 px-4 rounded-xl font-bold border-2 transition-all ${
                     donationAmount === amt && !customAmount
-                      ? 'border-rose-500 bg-rose-500/10 text-rose-400'
-                      : 'border-white/10 text-slate-400 hover:border-white/20'
+                      ? 'border-orange-500 bg-orange-500/10 text-orange-400'
+                      : 'border-slate-300 text-slate-600 hover:border-white/20'
                   }`}
                 >
                   ₹{amt}
@@ -171,12 +173,12 @@ export default function PledgePage() {
             </div>
             
             <div className="mb-8">
-              <label className="block text-sm font-medium text-slate-400 mb-2">Other Amount (₹)</label>
+              <label className="block text-sm font-medium text-slate-600 mb-2">Other Amount (₹)</label>
               <input
                 type="number"
                 value={customAmount}
                 onChange={(e) => { setCustomAmount(e.target.value); setDonationAmount(0); }}
-                className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white"
+                className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900"
                 placeholder="Enter custom amount"
               />
             </div>
@@ -185,14 +187,14 @@ export default function PledgePage() {
               <button
                 onClick={handleDonate}
                 disabled={isDonating}
-                className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_-5px_rgba(225,29,72,0.5)] hover:bg-rose-500 transition-all disabled:opacity-70"
+                className="w-full bg-orange-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_-5px_rgba(249,115,22,0.5)] hover:bg-orange-500 transition-all disabled:opacity-70"
               >
                 {isDonating ? 'PROCESSING...' : 'DONATE NOW'}
               </button>
               <button
                 onClick={handleNoThanks}
                 disabled={isCompleting}
-                className="w-full bg-white/5 text-slate-300 font-medium py-4 rounded-xl border border-white/10 hover:bg-white/10 transition-all disabled:opacity-70"
+                className="w-full bg-slate-100 text-slate-700 font-medium py-4 rounded-xl border border-slate-300 hover:bg-slate-200 transition-all disabled:opacity-70"
               >
                 {isCompleting ? 'PLEASE WAIT...' : 'NO, THANK YOU'}
               </button>
@@ -204,25 +206,25 @@ export default function PledgePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] py-12 px-4 sm:px-6 lg:px-8 flex justify-center selection:bg-rose-500/30">
-      <div className="max-w-2xl w-full bg-[#111] rounded-3xl shadow-2xl shadow-black/50 overflow-hidden border border-white/10">
+    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex justify-center selection:bg-orange-500/30">
+      <div className="max-w-2xl w-full bg-white rounded-3xl shadow-2xl shadow-black/50 overflow-hidden border border-slate-300">
         <div className="p-8 sm:p-12">
           
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center mb-6">
               <img src="/logo.png" alt="Veagle Space Logo" className="h-16 w-auto object-contain" />
             </div>
-            <h1 className="text-4xl font-black text-white tracking-tight mb-3">Take the Pledge</h1>
-            <p className="text-slate-400">Join the movement and receive your official certificate.</p>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">Take the Pledge</h1>
+            <p className="text-slate-600">Join the movement and receive your official certificate.</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             
             {/* Language Selector */}
-            <div className="p-4 bg-white/5 border border-white/10 rounded-2xl mb-8">
+            <div className="p-4 bg-slate-100 border border-slate-300 rounded-2xl mb-8">
               <div className="flex items-center gap-2 mb-3">
-                <Languages className="text-rose-400 w-5 h-5" />
-                <label className="text-sm font-bold text-white">Select Pledge Language</label>
+                <Languages className="text-orange-500 w-5 h-5" />
+                <label className="text-sm font-bold text-slate-900">Select Pledge Language</label>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -236,8 +238,8 @@ export default function PledgePage() {
                     onClick={() => setLanguage(lang.id)}
                     className={`py-2 rounded-xl font-medium border text-sm transition-all ${
                       language === lang.id 
-                      ? 'bg-rose-500/20 border-rose-500 text-rose-400' 
-                      : 'bg-transparent border-white/10 text-slate-400 hover:border-white/30'
+                      ? 'bg-orange-500/20 border-orange-500 text-orange-400' 
+                      : 'bg-transparent border-slate-300 text-slate-600 hover:border-slate-400'
                     }`}
                   >
                     {lang.label}
@@ -248,46 +250,46 @@ export default function PledgePage() {
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Full Name *</label>
-                <input required type="text" name="name" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white transition-all" placeholder="John Doe" />
+                <label className="block text-sm font-medium text-slate-600 mb-2">Full Name *</label>
+                <input required type="text" name="name" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900 transition-all" placeholder="John Doe" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Mobile Number *</label>
-                <input required type="tel" name="mobile" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white transition-all" placeholder="9876543210" />
+                <label className="block text-sm font-medium text-slate-600 mb-2">Mobile Number *</label>
+                <input required type="tel" name="mobile" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900 transition-all" placeholder="9876543210" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-2">Email Address *</label>
-              <input required type="email" name="email" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white transition-all" placeholder="john@example.com" />
+              <label className="block text-sm font-medium text-slate-600 mb-2">Email Address *</label>
+              <input required type="email" name="email" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900 transition-all" placeholder="john@example.com" />
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Profession *</label>
-                <select required name="profession" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-slate-300 transition-all">
-                  <option value="" className="bg-[#111]">Select</option>
-                  <option value="Student" className="bg-[#111]">Student</option>
-                  <option value="Employee" className="bg-[#111]">Employee</option>
-                  <option value="Business Owner" className="bg-[#111]">Business Owner</option>
-                  <option value="Professional" className="bg-[#111]">Professional</option>
-                  <option value="Teacher" className="bg-[#111]">Teacher</option>
-                  <option value="Other" className="bg-[#111]">Other</option>
+                <label className="block text-sm font-medium text-slate-600 mb-2">Profession *</label>
+                <select required name="profession" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-700 transition-all">
+                  <option value="" className="bg-white">Select</option>
+                  <option value="Student" className="bg-white">Student</option>
+                  <option value="Employee" className="bg-white">Employee</option>
+                  <option value="Business Owner" className="bg-white">Business Owner</option>
+                  <option value="Professional" className="bg-white">Professional</option>
+                  <option value="Teacher" className="bg-white">Teacher</option>
+                  <option value="Other" className="bg-white">Other</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">City</label>
-                <input type="text" name="city" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white transition-all" placeholder="Mumbai" />
+                <label className="block text-sm font-medium text-slate-600 mb-2">City</label>
+                <input type="text" name="city" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900 transition-all" placeholder="Mumbai" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">State</label>
-                <input type="text" name="state" onChange={handleChange} className="w-full rounded-xl bg-white/5 border-white/10 px-4 py-3 border focus:border-rose-500 outline-none text-white transition-all" placeholder="Maharashtra" />
+                <label className="block text-sm font-medium text-slate-600 mb-2">State</label>
+                <input type="text" name="state" onChange={handleChange} className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900 transition-all" placeholder="Maharashtra" />
               </div>
             </div>
 
-            <div className="mt-8 p-6 bg-rose-950/20 rounded-2xl border border-rose-900/30">
-              <h3 className="font-bold text-rose-400 mb-3 text-lg">Your Pledge</h3>
-              <p className="text-slate-300 italic mb-6 leading-relaxed font-serif text-lg">"{getPledgeText()}"</p>
+            <div className="mt-8 p-6 bg-orange-50 rounded-2xl border border-orange-200">
+              <h3 className="font-bold text-orange-600 mb-3 text-lg">Your Pledge</h3>
+              <p className="text-slate-700 italic mb-6 leading-relaxed font-serif text-lg">"{getPledgeText()}"</p>
               
               <label className="flex items-start gap-3 cursor-pointer group">
                 <div className="flex h-6 items-center">
@@ -296,17 +298,17 @@ export default function PledgePage() {
                     name="consent"
                     type="checkbox"
                     onChange={handleChange}
-                    className="h-5 w-5 rounded border-white/20 bg-white/5 text-rose-500 focus:ring-rose-500 focus:ring-offset-[#111]"
+                    className="h-5 w-5 rounded border-slate-300 bg-white text-orange-500 focus:ring-orange-500 focus:ring-offset-white"
                   />
                 </div>
-                <div className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                <div className="text-sm text-slate-600 group-hover:text-slate-700 transition-colors">
                   I agree to take this pledge and allow my submitted details to be used for campaign administration and certificate generation. My certificate will be generated in the language selected above.
                 </div>
               </label>
             </div>
 
             {status === 'error' && (
-              <div className="flex items-center gap-2 text-rose-400 bg-rose-500/10 border border-rose-500/20 p-4 rounded-xl">
+              <div className="flex items-center gap-2 text-orange-600 bg-orange-50 border border-orange-200 p-4 rounded-xl">
                 <AlertCircle size={20} />
                 <span>There was an error processing your pledge. Please try again.</span>
               </div>
@@ -315,7 +317,7 @@ export default function PledgePage() {
             <button
               disabled={isCreating}
               type="submit"
-              className="w-full flex justify-center py-4 px-4 rounded-xl shadow-[0_0_30px_-5px_rgba(225,29,72,0.4)] text-lg font-bold text-white bg-rose-600 hover:bg-rose-500 hover:-translate-y-0.5 transition-all outline-none disabled:opacity-70 disabled:hover:translate-y-0"
+              className="w-full flex justify-center py-4 px-4 rounded-xl shadow-[0_0_30px_-5px_rgba(249,115,22,0.4)] text-lg font-bold text-white bg-orange-600 hover:bg-orange-500 hover:-translate-y-0.5 transition-all outline-none disabled:opacity-70 disabled:hover:translate-y-0"
             >
               {isCreating ? 'PROCESSING...' : 'SUBMIT PLEDGE'}
             </button>
@@ -323,5 +325,13 @@ export default function PledgePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PledgePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div></div>}>
+      <PledgeContent />
+    </Suspense>
   );
 }

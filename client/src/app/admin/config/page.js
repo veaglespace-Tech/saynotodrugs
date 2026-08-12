@@ -51,7 +51,7 @@ export default function SiteConfigPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
       </div>
     );
   }
@@ -59,20 +59,20 @@ export default function SiteConfigPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Site Configuration</h1>
-        <p className="text-slate-400 mt-1">Manage public texts, certificates, and multi-language pledges.</p>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Site Configuration</h1>
+        <p className="text-slate-600 mt-1">Manage public texts, certificates, and multi-language pledges.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         
         {/* Certificate Section */}
-        <div className="bg-[#111] rounded-3xl border border-white/5 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-white/5 bg-white/5 flex items-center gap-3">
-            <FileText className="text-rose-400" />
-            <h2 className="text-xl font-bold text-white">Certificate Format</h2>
+        <div className="bg-white rounded-3xl border border-white/5 shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-white/5 bg-slate-100 flex items-center gap-3">
+            <FileText className="text-orange-400" />
+            <h2 className="text-xl font-bold text-slate-900">Certificate Format</h2>
           </div>
           <div className="p-6">
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Certificate Introductory Text (Use <code>{'{name}'}</code> as placeholder)
             </label>
             <textarea
@@ -80,20 +80,20 @@ export default function SiteConfigPage() {
               value={formData.certificateFormat}
               onChange={handleChange}
               rows="3"
-              className="block w-full px-4 py-3 border border-white/10 bg-white/5 rounded-xl text-white focus:ring-2 focus:ring-rose-500 outline-none"
+              className="block w-full px-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none"
               placeholder="This certificate is proudly presented to {name}..."
             />
           </div>
         </div>
 
         {/* Donation Usage Section */}
-        <div className="bg-[#111] rounded-3xl border border-white/5 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-white/5 bg-white/5 flex items-center gap-3">
+        <div className="bg-white rounded-3xl border border-white/5 shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-white/5 bg-slate-100 flex items-center gap-3">
             <Shield className="text-emerald-400" />
-            <h2 className="text-xl font-bold text-white">Donation Usage (Concern Page)</h2>
+            <h2 className="text-xl font-bold text-slate-900">Donation Usage (Concern Page)</h2>
           </div>
           <div className="p-6">
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Where will the donations be used? (Displayed to users before payment)
             </label>
             <textarea
@@ -101,47 +101,47 @@ export default function SiteConfigPage() {
               value={formData.donationUsage}
               onChange={handleChange}
               rows="4"
-              className="block w-full px-4 py-3 border border-white/10 bg-white/5 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="block w-full px-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none"
               placeholder="Funds will be used for Women Safety..."
             />
           </div>
         </div>
 
         {/* Multi-Language Pledges */}
-        <div className="bg-[#111] rounded-3xl border border-white/5 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-white/5 bg-white/5 flex items-center gap-3">
+        <div className="bg-white rounded-3xl border border-white/5 shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-white/5 bg-slate-100 flex items-center gap-3">
             <Languages className="text-amber-400" />
-            <h2 className="text-xl font-bold text-white">Pledges (3 Languages)</h2>
+            <h2 className="text-xl font-bold text-slate-900">Pledges (3 Languages)</h2>
           </div>
           <div className="p-6 space-y-6">
             <div>
-              <label className="block text-sm font-bold text-slate-300 mb-2">English Pledge</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">English Pledge</label>
               <textarea
                 name="pledgeEnglish"
                 value={formData.pledgeEnglish}
                 onChange={handleChange}
                 rows="2"
-                className="block w-full px-4 py-3 border border-white/10 bg-white/5 rounded-xl text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                className="block w-full px-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 focus:ring-2 focus:ring-amber-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-300 mb-2">Hindi Pledge (हिन्दी)</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Hindi Pledge (हिन्दी)</label>
               <textarea
                 name="pledgeHindi"
                 value={formData.pledgeHindi}
                 onChange={handleChange}
                 rows="2"
-                className="block w-full px-4 py-3 border border-white/10 bg-white/5 rounded-xl text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                className="block w-full px-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 focus:ring-2 focus:ring-amber-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-300 mb-2">Marathi Pledge (मराठी)</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Marathi Pledge (मराठी)</label>
               <textarea
                 name="pledgeMarathi"
                 value={formData.pledgeMarathi}
                 onChange={handleChange}
                 rows="2"
-                className="block w-full px-4 py-3 border border-white/10 bg-white/5 rounded-xl text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                className="block w-full px-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 focus:ring-2 focus:ring-amber-500 outline-none"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function SiteConfigPage() {
           <button
             type="submit"
             disabled={isUpdating}
-            className="flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_-5px_rgba(225,29,72,0.4)] disabled:opacity-50"
+            className="flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_-5px_rgba(249,115,22,0.4)] disabled:opacity-50"
           >
             <Save size={20} />
             {isUpdating ? 'Saving...' : 'Save Configuration'}

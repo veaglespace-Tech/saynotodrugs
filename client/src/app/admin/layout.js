@@ -32,14 +32,14 @@ export default function AdminLayout({ children }) {
 
   if (!mounted) {
     // Avoid hydration mismatch by returning a placeholder or empty div with same structure
-    return <div className="h-screen overflow-hidden bg-[#0a0a0a] flex"></div>;
+    return <div className="h-screen overflow-hidden bg-slate-50 flex"></div>;
   }
 
   if (isLoginPage) {
     return <>{children}</>;
   }
 
-  if (!token) return <div className="h-screen overflow-hidden bg-[#0a0a0a] flex"></div>; // Wait for redirect
+  if (!token) return <div className="h-screen overflow-hidden bg-slate-50 flex"></div>; // Wait for redirect
 
   const navItems = [
     { name: 'Overview', href: '/admin', icon: LayoutDashboard },
@@ -50,11 +50,11 @@ export default function AdminLayout({ children }) {
   ];
 
   return (
-    <div className="h-screen overflow-hidden bg-[#0a0a0a] flex selection:bg-rose-500/30">
+    <div className="h-screen overflow-hidden bg-slate-50 flex selection:bg-orange-500/30">
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-72 bg-[#111] border-r border-white/5 text-slate-300">
-        <div className="h-20 flex items-center px-8 border-b border-white/5">
-          <div className="flex items-center gap-3 text-white">
+      <aside className="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 text-slate-700">
+        <div className="h-20 flex items-center px-8 border-b border-slate-200">
+          <div className="flex items-center gap-3 text-slate-900">
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
             <span className="text-xl font-bold tracking-tight">Say No to Drugs</span>
           </div>
@@ -71,8 +71,8 @@ export default function AdminLayout({ children }) {
               <Link key={item.name} href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive 
-                  ? 'bg-rose-600 text-white shadow-lg shadow-rose-900/20' 
-                  : 'hover:bg-white/5 hover:text-white'
+                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/20' 
+                  : 'hover:bg-slate-100 hover:text-slate-900'
                 }`}
               >
                 <Icon size={20} className={isActive ? 'text-white' : 'text-slate-500'} />
@@ -82,19 +82,19 @@ export default function AdminLayout({ children }) {
           })}
         </div>
 
-        <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl mb-4 border border-white/5">
-            <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-rose-700 rounded-full flex items-center justify-center text-white font-bold shadow-inner">
+        <div className="p-4 border-t border-slate-200">
+          <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 rounded-xl mb-4 border border-slate-200">
+            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-full flex items-center justify-center text-white font-bold shadow-inner">
               {adminUser?.name?.charAt(0) || 'A'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate">{adminUser?.name || 'Admin'}</p>
-              <p className="text-xs text-slate-400 truncate">{adminUser?.role || 'Super Admin'}</p>
+              <p className="text-sm font-bold text-slate-900 truncate">{adminUser?.name || 'Admin'}</p>
+              <p className="text-xs text-slate-600 truncate">{adminUser?.role || 'Super Admin'}</p>
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all"
           >
             <LogOut size={20} />
             <span className="font-medium">Sign Out</span>
@@ -103,14 +103,14 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden text-slate-300">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden text-slate-700">
         {/* Mobile Header */}
-        <header className="md:hidden h-16 bg-[#111] border-b border-white/5 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2 text-white">
+        <header className="md:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4">
+          <div className="flex items-center gap-2 text-slate-900">
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
             <span className="font-bold tracking-tight">Say No to Drugs</span>
           </div>
-          <button className="text-slate-400 hover:text-white transition-colors">
+          <button className="text-slate-600 hover:text-slate-900 transition-colors">
             <Menu size={24} />
           </button>
         </header>
