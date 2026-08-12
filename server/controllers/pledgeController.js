@@ -17,6 +17,19 @@ export const createPledge = asyncHandler(async (req, res) => {
     throw new Error('Missing required fields');
   }
 
+  // Basic security validation
+  if (!/^\d{10}$/.test(mobile)) {
+    res.status(400);
+    throw new Error('Mobile number must be exactly 10 digits');
+  }
+
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400);
+    throw new Error('Invalid email format');
+  }
+
   let user = await prisma.user.findFirst({
     where: { email }
   });

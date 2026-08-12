@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime.js';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import QRCode from 'qrcode';
@@ -18,12 +19,9 @@ export const generateCertificate = async (name, certificateNumber, date, languag
   // Load standard fonts
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const timesRomanBoldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
-  const timesRomanItalicFont = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
   
-  // Load Devanagari font for Hindi/Marathi
-  let customFont = timesRomanFont;
-  let isDevanagari = language === 'hindi' || language === 'marathi';
-  
+  // Load Devanagari font (always used for Name to prevent box rendering issues)
+  let customFont = timesRomanFont; // fallback
   try {
     const fontBytes = fs.readFileSync(path.join(__dirname, '../fonts/NotoSansDevanagari-Regular.ttf'));
     customFont = await pdfDoc.embedFont(fontBytes);
@@ -31,229 +29,88 @@ export const generateCertificate = async (name, certificateNumber, date, languag
     console.error('Could not load custom font, falling back to standard font.', err);
   }
 
-  // Load Veagle Logo if available
-  let veagleLogoImage = null;
-  try {
-    const logoPath = path.join(__dirname, '../assets/veagle_logo.png');
-    if (fs.existsSync(logoPath)) {
-      const logoBytes = fs.readFileSync(logoPath);
-      veagleLogoImage = await pdfDoc.embedPng(logoBytes);
-    }
-  } catch (err) {
-    console.error('Logo not found or could not be loaded.', err);
-  }
-
-  // Determine text based on language
-  let titleText = 'CERTIFICATE OF PLEDGE';
-  let pledgeTextToRender = config?.pledgeEnglish || 'I pledge to say NO to drugs.';
-  
-  if (language === 'hindi') {
-    titleText = 'प्रतिज्ञा प्रमाण पत्र';
-    pledgeTextToRender = config?.pledgeHindi || 'मैं नशीली दवाओं और मादक पदार्थों के सेवन को ना कहने की प्रतिज्ञा करता हूँ।';
-  } else if (language === 'marathi') {
-    titleText = 'प्रतिज्ञा प्रमाणपत्र';
-    pledgeTextToRender = config?.pledgeMarathi || 'मी अमली पदार्थ आणि व्यसनांना नाही म्हणण्याची प्रतिज्ञा करतो.';
-  }
-
-  const certificateFormat = config?.certificateFormat || 'This certificate is proudly presented to {name} for taking the pledge to SAY NO TO DRUGS.';
-  const introText = certificateFormat.replace('{name}', ''); // Just fallback if we don't use it directly
-
-  // A4 size in portrait
-  const width = 595.28;
-  const height = 841.89;
+  // The full image is landscape. Typical size 1024x683
+  const width = 1024;
+  const height = 683;
   const page = pdfDoc.addPage([width, height]);
   
-  // Outer Border (Gold-ish)
-  page.drawRectangle({
-    x: 20,
-    y: 20,
-    width: width - 40,
-    height: height - 40,
-    borderColor: rgb(0.85, 0.65, 0.13), // Goldenrod
-    borderWidth: 4,
-  });
-  
-  // Inner Border (Dashed or Solid)
-  page.drawRectangle({
-    x: 28,
-    y: 28,
-    width: width - 56,
-    height: height - 56,
-    borderColor: rgb(0.85, 0.65, 0.13),
-    borderWidth: 1,
-  });
-
-  // Top Section (Logo + Heading)
-  if (veagleLogoImage) {
-    const logoDims = veagleLogoImage.scale(0.25);
-    page.drawImage(veagleLogoImage, {
-      x: width - logoDims.width - 40,
-      y: height - logoDims.height - 40,
-      width: logoDims.width,
-      height: logoDims.height,
-    });
-  } else {
-    // Text fallback for Veagle Space
-    page.drawText('Veagle Space', {
-      x: width - 130,
-      y: height - 70,
-      size: 16,
-      font: timesRomanBoldFont,
-      color: rgb(0.0, 0.3, 0.7), // Blue color like logo
-    });
-  }
-
-  // CIN Number (mock)
-  page.drawText('CIN No. - U62011PN2025PTC241963', {
-    x: 40,
-    y: height - 120,
-    size: 10,
-    font: timesRomanBoldFont,
-    color: rgb(0.3, 0.3, 0.3),
-  });
-
-  // Main Title
-  page.drawText(titleText, {
-    x: width / 2 - (isDevanagari ? 80 : 130),
-    y: height - 100,
-    size: 24,
-    font: isDevanagari ? customFont : timesRomanBoldFont,
-    color: rgb(0.1, 0.2, 0.5),
-  });
-
-  // Presentation Text (Golden Box bg)
-  page.drawRectangle({
-    x: width / 2 - 180,
-    y: height - 280,
-    width: 360,
-    height: 30,
-    color: rgb(0.85, 0.73, 0.2), // Gold bg
-  });
-  
-  page.drawText('This Certificate is proudly presented to', {
-    x: width / 2 - 140,
-    y: height - 270,
-    size: 18,
-    font: timesRomanFont,
-    color: rgb(1, 1, 1),
-  });
-
-  // Name
-  const nameFont = isDevanagari ? customFont : timesRomanBoldFont;
-  page.drawText(name, {
-    x: width / 2 - (nameFont.widthOfTextAtSize(name, 26) / 2),
-    y: height - 330,
-    size: 26,
-    font: nameFont,
-    color: rgb(0.1, 0.1, 0.1),
-  });
-
-  // Descriptive Text / Pledge
-  const maxWidth = width - 100;
-  const words = pledgeTextToRender.split(' ');
-  let lines = [];
-  let currentLine = '';
-  const fontToUse = isDevanagari ? customFont : timesRomanFont;
-
-  for (const word of words) {
-    const testLine = currentLine + word + ' ';
-    const textWidth = fontToUse.widthOfTextAtSize(testLine, 12);
-    if (textWidth > maxWidth) {
-      lines.push(currentLine);
-      currentLine = word + ' ';
+  // Load the full JPEG certificate template
+  try {
+    const templatePath = path.join(__dirname, '../assets/certificate_full.jpg');
+    if (fs.existsSync(templatePath)) {
+      const templateBytes = fs.readFileSync(templatePath);
+      const templateImage = await pdfDoc.embedJpg(templateBytes);
+      
+      // Draw template to cover the entire page
+      page.drawImage(templateImage, {
+        x: 0,
+        y: 0,
+        width: width,
+        height: height,
+      });
     } else {
-      currentLine = testLine;
+        throw new Error('Full certificate image not found in assets');
     }
+  } catch (err) {
+    console.error('Template image not found or could not be loaded.', err);
+    page.drawRectangle({ x: 0, y: 0, width, height, color: rgb(0.95, 0.95, 0.95) });
   }
-  lines.push(currentLine);
 
-  let currentY = height - 390;
+  // The certificate section is on the right half. (x: 512 to 1024)
+  // The visual center of the certificate is slightly shifted, around 785
+  const certCenterX = 785;
   
-  for (const line of lines) {
-    page.drawText(line.trim(), {
-      x: width / 2 - (fontToUse.widthOfTextAtSize(line.trim(), 12) / 2),
-      y: currentY,
-      size: 12,
-      font: fontToUse,
-      color: rgb(0.3, 0.3, 0.3),
-    });
-    currentY -= 20;
-  }
-
-  // Footer Blue Area Background
-  page.drawRectangle({
-    x: 20,
-    y: 20,
-    width: width - 40,
-    height: 160,
-    color: rgb(0.09, 0.27, 0.6), // Dark Blue
+  // Name - Centered vertically around the blank space below "PROUDLY PRESENTED TO"
+  // Assuming "PROUDLY PRESENTED TO" is around y = 480, we place name around y = 430
+  const isDevanagari = /[\u0900-\u097F]/.test(name);
+  const nameFont = isDevanagari ? customFont : timesRomanBoldFont;
+  const nameSize = 34;
+  const nameWidth = nameFont.widthOfTextAtSize(name, nameSize);
+  
+  page.drawText(name, {
+    x: certCenterX - (nameWidth / 2),
+    y: height * 0.62, // ~423
+    size: nameSize,
+    font: nameFont,
+    color: rgb(0.1, 0.2, 0.4), // Dark Blue to match theme
   });
 
   // Verification QR Code
-  // Generate QR pointing to frontend verification url
-  // Assuming frontend runs on same domain or we use the server URL. Since we don't know the exact domain, 
-  // we can use a relative or placeholder domain. Ideally `process.env.NEXT_PUBLIC_CLIENT_URL`.
-  // The client URL is usually what the user accesses.
   const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:3000'}/verify/${certificateNumber}`; 
-  const qrDataUrl = await QRCode.toDataURL(verifyUrl, { margin: 1 });
+  const qrDataUrl = await QRCode.toDataURL(verifyUrl, { margin: 1, color: { dark: '#0a192f', light: '#ffffff' } });
   const qrImageBytes = Buffer.from(qrDataUrl.split(',')[1], 'base64');
   const qrImage = await pdfDoc.embedPng(qrImageBytes);
   
-  const qrSize = 100;
+  const qrSize = 85;
+  
+  // Position QR Code at bottom left of the certificate half
+  // Move it up so it doesn't overlap the bottom ribbon and stays left of the wreath
+  const certLeftX = 540;
+  const bottomY = 85;
+  
   page.drawImage(qrImage, {
-    x: width / 2 - (qrSize / 2),
-    y: 50,
+    x: certLeftX,
+    y: bottomY,
     width: qrSize,
     height: qrSize,
   });
 
-  page.drawText(certificateNumber, {
-    x: width / 2 - (timesRomanBoldFont.widthOfTextAtSize(certificateNumber, 12) / 2),
-    y: 160,
-    size: 12,
-    font: timesRomanBoldFont,
-    color: rgb(1, 1, 1),
-  });
-
-  page.drawText(`Issuance Date - ${date}`, {
-    x: width / 2 - 70,
-    y: 35,
-    size: 10,
-    font: timesRomanFont,
-    color: rgb(1, 1, 1),
-  });
-
-  // Authority Signature Name
-  page.drawText('Vinaykumar P.', {
-    x: 60,
-    y: 100,
-    size: 24,
-    font: timesRomanItalicFont,
-    color: rgb(1, 1, 1),
-  });
-  
-  page.drawText('Founder And MD', {
-    x: 70,
-    y: 80,
-    size: 10,
-    font: timesRomanFont,
-    color: rgb(0.8, 0.8, 0.8),
-  });
-  page.drawText('Mr. Vinay Kumar P.', {
-    x: 70,
-    y: 65,
+  // Date and Certificate ID below QR code, drawn in dark blue so it is visible on the cream background
+  page.drawText(`Date: ${date}`, {
+    x: certLeftX + 5,
+    y: bottomY - 14,
     size: 10,
     font: timesRomanBoldFont,
-    color: rgb(1, 1, 1),
-  });
-  page.drawText('Veagle Space of Technology Pvt. Ltd.', {
-    x: 70,
-    y: 50,
-    size: 9,
-    font: timesRomanFont,
-    color: rgb(0.8, 0.8, 0.8),
+    color: rgb(0.1, 0.2, 0.4),
   });
 
+  page.drawText(`ID: ${certificateNumber}`, {
+    x: certLeftX + 5,
+    y: bottomY - 26,
+    size: 10,
+    font: timesRomanBoldFont,
+    color: rgb(0.1, 0.2, 0.4),
+  });
 
   // Serialize the PDFDocument to bytes
   const pdfBytes = await pdfDoc.save();

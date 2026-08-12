@@ -36,8 +36,8 @@ export default function UsersPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-3xl border border-white/5 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-white/5 bg-slate-100">
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-slate-200 bg-slate-100">
           <div className="relative max-w-md">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-slate-500" />
@@ -53,7 +53,7 @@ export default function UsersPage() {
         </div>
         
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-white/5">
+          <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-white">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">User Details</th>
@@ -63,7 +63,7 @@ export default function UsersPage() {
                 <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-white/5">
+            <tbody className="bg-white divide-y divide-slate-200">
               {filteredPledges.map((pledge) => (
                 <tr key={pledge.id} className="hover:bg-slate-100 transition-colors">
                   <td className="px-6 py-4">

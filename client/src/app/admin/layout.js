@@ -17,6 +17,7 @@ export default function AdminLayout({ children }) {
   const isLoginPage = pathname === '/admin/login';
 
   const [mounted, setMounted] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -51,8 +52,17 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="h-screen overflow-hidden bg-slate-50 flex selection:bg-orange-500/30">
+      
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-20 md:hidden" 
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 text-slate-700">
+      <aside className={`fixed inset-y-0 left-0 z-30 flex flex-col w-72 bg-white border-r border-slate-200 text-slate-700 transform transition-transform duration-300 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="h-20 flex items-center px-8 border-b border-slate-200">
           <div className="flex items-center gap-3 text-slate-900">
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
@@ -69,6 +79,7 @@ export default function AdminLayout({ children }) {
             const Icon = item.icon;
             return (
               <Link key={item.name} href={item.href}
+                onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive 
                   ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/20' 
@@ -110,7 +121,10 @@ export default function AdminLayout({ children }) {
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
             <span className="font-bold tracking-tight">Say No to Drugs</span>
           </div>
-          <button className="text-slate-600 hover:text-slate-900 transition-colors">
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="text-slate-600 hover:text-slate-900 transition-colors p-2"
+          >
             <Menu size={24} />
           </button>
         </header>
