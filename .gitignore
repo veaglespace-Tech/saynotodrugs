@@ -6,8 +6,6 @@ node_modules/
 .next/
 server_error.log
 client/.next/
-server/assets/veagle_logo.png
-client/public/logo.png
 dist/
 build/
 .DS_Store

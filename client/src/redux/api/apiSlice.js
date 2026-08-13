@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: typeof window !== 'undefined' ? `http://${window.location.hostname}:5000/api` : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'),
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
     prepareHeaders: (headers, { getState }) => {
       const token = getState().app.token;
       if (token) {
