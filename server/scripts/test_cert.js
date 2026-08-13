@@ -1,4 +1,4 @@
-import { generateCertificate } from './services/certificateService.js';
+import { generateCertificate } from '../services/certificateService.js';
 import fs from 'fs';
 
 async function test() {
