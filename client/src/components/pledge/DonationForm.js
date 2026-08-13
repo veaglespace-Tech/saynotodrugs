@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useInitDonationMutation, useCompletePledgeMutation } from '../../../redux/api/apiSlice';
+import { useInitDonationMutation, useCompletePledgeMutation } from '../../redux/api/apiSlice';
 
 export default function DonationForm({ pledgeId }) {
   const [donationAmount, setDonationAmount] = useState(500);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Languages, AlertCircle } from 'lucide-react';
-import { useCreatePledgeMutation } from '../../../redux/api/apiSlice';
-import { getPledgePoints } from '../../../constants/pledgeTexts';
+import { useCreatePledgeMutation } from '../../redux/api/apiSlice';
+import { getPledgePoints } from '../../constants/pledgeTexts';
 
 export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
   const [formData, setFormData] = useState({
