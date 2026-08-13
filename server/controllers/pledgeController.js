@@ -111,8 +111,8 @@ export const initDonation = asyncHandler(async (req, res) => {
     data: { transactionId: txnid }
   });
 
-  const key = config.payu.testKey;
-  const salt = config.payu.testSalt;
+  const key = config.payu.key;
+  const salt = config.payu.salt;
   const email = pledge.user.email;
   const firstname = pledge.user.name;
   const phone = pledge.user.mobile;
@@ -124,7 +124,7 @@ export const initDonation = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    payuData: { key, txnid, amount, productinfo, firstname, email, phone, surl, furl, hash }
+    payuData: { key, txnid, amount, productinfo, firstname, email, phone, surl, furl, hash, url: config.payu.baseUrl }
   });
 });
 

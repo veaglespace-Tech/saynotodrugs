@@ -20,7 +20,7 @@ export default function DonationForm({ pledgeId }) {
         
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = process.env.NEXT_PUBLIC_PAYU_URL || 'https://test.payu.in/_payment';
+        form.action = pd.url || process.env.NEXT_PUBLIC_PAYU_URL || 'https://test.payu.in/_payment';
         
         const inputs = {
           key: pd.key,

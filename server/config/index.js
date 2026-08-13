@@ -7,9 +7,9 @@ export const config = {
   clientUrl: process.env.CLIENT_URL,
   serverBaseUrl: process.env.SERVER_BASE_URL,
   payu: {
-    baseUrl: process.env.PAYU_BASE_URL,
-    testKey: process.env.PAYU_TEST_KEY,
-    testSalt: process.env.PAYU_TEST_SALT
+    baseUrl: process.env.NODE_ENV === 'production' ? (process.env.PAYU_BASE_URL || 'https://secure.payu.in/_payment') : 'https://test.payu.in/_payment',
+    key: process.env.NODE_ENV === 'production' ? process.env.PAYU_MERCHANT_KEY : (process.env.PAYU_TEST_KEY || process.env.PAYU_MERCHANT_KEY),
+    salt: process.env.NODE_ENV === 'production' ? process.env.PAYU_MERCHANT_SALT : (process.env.PAYU_TEST_SALT || process.env.PAYU_MERCHANT_SALT),
   },
   email: {
     user: process.env.EMAIL,
