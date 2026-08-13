@@ -8,7 +8,22 @@ export const getCampaigns = asyncHandler(async (req, res) => {
   const campaigns = await prisma.campaign.findMany({
     where: { status: 'active' },
   });
-  res.json({ success: true, campaigns });
+
+  const totalPledges = await prisma.pledge.count();
+  
+  const totalDonations = await prisma.donation.aggregate({
+    where: { paymentStatus: 'success' },
+    _sum: { amount: true }
+  });
+
+  res.json({ 
+    success: true, 
+    campaigns,
+    stats: {
+      totalPledges,
+      totalDonations: totalDonations._sum.amount || 0
+    }
+  });
 });
 
 // @desc    Get a single campaign by ID

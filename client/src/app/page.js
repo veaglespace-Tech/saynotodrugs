@@ -54,6 +54,30 @@ export default function Home() {
             </Link>
           </div>
           
+          {/* Stats Card */}
+          {data?.stats && (
+            <div className="mt-16 mx-auto max-w-2xl bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-3xl p-8 shadow-xl shadow-slate-200/20 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-500">
+              <div className="grid grid-cols-2 gap-8 divide-x divide-slate-200/50">
+                <div className="flex flex-col items-center justify-center">
+                  <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-orange-500 to-orange-700 mb-2">
+                    {data.stats.totalPledges.toLocaleString()}
+                  </span>
+                  <span className="text-sm md:text-base font-bold text-slate-600 uppercase tracking-wider">
+                    Total Pledges
+                  </span>
+                </div>
+                <div className="flex flex-col items-center justify-center">
+                  <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-emerald-700 mb-2">
+                    ₹{data.stats.totalDonations.toLocaleString()}
+                  </span>
+                  <span className="text-sm md:text-base font-bold text-slate-600 uppercase tracking-wider">
+                    Funds Raised
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </main>
 

@@ -1,29 +1,55 @@
 'use client';
-import { Download, Search, CheckCircle2, XCircle, Clock, X, User, Mail, Phone, IndianRupee, CreditCard, Calendar, FileText, Hash } from 'lucide-react';
+import { Download, Search, CheckCircle2, XCircle, Clock, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGetAdminPledgesQuery } from '../../../redux/api/apiSlice';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
 
 export default function PaymentsPage() {
   const { data, isLoading } = useGetAdminPledgesQuery();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDonation, setSelectedDonation] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'success', 'failed', 'pending'
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const pledges = data?.success ? data.pledges : [];
   
   // Flatten donations from pledges for the table
-  const allDonations = pledges.flatMap(p => 
-    p.donations.map(d => ({
-      ...d,
-      user: p.user,
-      pledgeId: p.id,
-      campaign: p.campaign
-    }))
-  ).sort((a, b) => new Date(b.paymentDate || b.id) - new Date(a.paymentDate || a.id));
+  const allDonations = useMemo(() => {
+    return pledges.flatMap(p => 
+      p.donations.map(d => ({
+        ...d,
+        user: p.user,
+        pledgeId: p.id,
+        campaign: p.campaign
+      }))
+    ).sort((a, b) => new Date(b.paymentDate || b.id) - new Date(a.paymentDate || a.id));
+  }, [pledges]);
 
-  const filteredDonations = allDonations.filter(d => 
-    d.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    d.transactionId?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter & Search Logic
+  const filteredDonations = useMemo(() => {
+    return allDonations.filter(d => {
+      const matchesSearch = 
+        d.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        d.transactionId?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesStatus = statusFilter === 'all' || d.paymentStatus === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [allDonations, searchTerm, statusFilter]);
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredDonations.length / itemsPerPage);
+  const paginatedDonations = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredDonations.slice(start, start + itemsPerPage);
+  }, [filteredDonations, currentPage]);
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
 
   if (isLoading) {
     return (
@@ -47,8 +73,9 @@ export default function PaymentsPage() {
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-200 bg-slate-100">
-          <div className="relative max-w-md">
+        {/* Filters & Search */}
+        <div className="p-6 border-b border-slate-200 bg-slate-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-slate-500" />
             </div>
@@ -57,11 +84,29 @@ export default function PaymentsPage() {
               placeholder="Search by donor name or TXN ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
             />
+          </div>
+          
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-2 text-slate-600 font-medium">
+              <Filter size={18} />
+              <span className="hidden sm:inline">Status:</span>
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all cursor-pointer"
+            >
+              <option value="all">All Payments</option>
+              <option value="success">Success</option>
+              <option value="failed">Failed</option>
+              <option value="pending">Pending</option>
+            </select>
           </div>
         </div>
         
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-white">
@@ -75,7 +120,7 @@ export default function PaymentsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
-              {filteredDonations.map((donation) => (
+              {paginatedDonations.map((donation) => (
                 <tr key={donation.id} className="hover:bg-slate-100 transition-colors">
                   <td className="px-6 py-4">
                     <div className="font-bold text-slate-900">{donation.user?.name}</div>
@@ -108,133 +153,54 @@ export default function PaymentsPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => setSelectedDonation(donation)}
-                      className="text-emerald-500 hover:text-emerald-400 font-medium text-sm"
+                    <Link 
+                      href={`/admin/payments/${donation.id}`}
+                      className="inline-flex items-center justify-center px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 font-semibold rounded-lg transition-colors border border-emerald-200"
                     >
-                      View
-                    </button>
+                      View Details
+                    </Link>
                   </td>
                 </tr>
               ))}
-              {filteredDonations.length === 0 && (
+              {paginatedDonations.length === 0 && (
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center text-slate-500">
-                    No donations found.
+                    No donations found matching your search and filters.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div className="text-sm text-slate-500">
+              Showing <span className="font-semibold text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * itemsPerPage, filteredDonations.length)}</span> of <span className="font-semibold text-slate-900">{filteredDonations.length}</span> results
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg border border-slate-300 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold text-slate-700">
+                Page {currentPage} of {totalPages}
+              </div>
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg border border-slate-300 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Payment Detail Modal */}
-      {selectedDonation && (
-        <PaymentDetailModal 
-          donation={selectedDonation} 
-          onClose={() => setSelectedDonation(null)} 
-        />
-      )}
-    </div>
-  );
-}
-
-function PaymentDetailModal({ donation, onClose }) {
-  const user = donation.user;
-
-  const statusColors = {
-    success: { bg: 'bg-emerald-500/10', text: 'text-emerald-600', border: 'border-emerald-500/20', icon: CheckCircle2, label: 'Payment Successful' },
-    failed: { bg: 'bg-red-500/10', text: 'text-red-600', border: 'border-red-500/20', icon: XCircle, label: 'Payment Failed' },
-    pending: { bg: 'bg-amber-500/10', text: 'text-amber-600', border: 'border-amber-500/20', icon: Clock, label: 'Payment Pending' }
-  };
-
-  const status = statusColors[donation.paymentStatus] || statusColors.pending;
-  const StatusIcon = status.icon;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
-      
-      {/* Modal */}
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-5 text-white">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">Payment Details</h2>
-            <button 
-              onClick={onClose}
-              className="p-1.5 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
-            >
-              <X size={18} />
-            </button>
-          </div>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="text-4xl font-black">₹{donation.amount}</div>
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${status.bg} ${status.text} ${status.border} bg-white/90`}>
-              <StatusIcon size={14} />
-              {status.label}
-            </div>
-          </div>
-        </div>
-
-        <div className="p-6 space-y-5">
-          {/* Donor Info */}
-          <div>
-            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Donor Information</h4>
-            <div className="space-y-2.5">
-              <DetailRow icon={User} label="Name" value={user?.name} />
-              <DetailRow icon={Mail} label="Email" value={user?.email} />
-              <DetailRow icon={Phone} label="Mobile" value={user?.mobile} />
-            </div>
-          </div>
-
-          <hr className="border-slate-200" />
-
-          {/* Transaction Info */}
-          <div>
-            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Transaction Details</h4>
-            <div className="space-y-2.5">
-              <DetailRow icon={Hash} label="TXN ID" value={donation.transactionId || 'N/A'} mono />
-              <DetailRow icon={CreditCard} label="Gateway" value={(donation.paymentGateway || 'payu').toUpperCase()} />
-              <DetailRow icon={IndianRupee} label="Amount" value={`₹${donation.amount}`} />
-              <DetailRow icon={Calendar} label="Date" value={donation.paymentDate ? new Date(donation.paymentDate).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-'} />
-            </div>
-          </div>
-
-          <hr className="border-slate-200" />
-
-          {/* Pledge Reference */}
-          <div>
-            <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Pledge Reference</h4>
-            <div className="space-y-2.5">
-              <DetailRow icon={FileText} label="Pledge ID" value={`#${donation.pledgeId}`} />
-              <DetailRow icon={FileText} label="Campaign" value={donation.campaign?.name || '-'} />
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-          <button 
-            onClick={onClose}
-            className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DetailRow({ icon: Icon, label, value, mono }) {
-  return (
-    <div className="flex items-center gap-3">
-      <Icon size={15} className="text-slate-400 flex-shrink-0" />
-      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider w-20 flex-shrink-0">{label}</span>
-      <span className={`text-sm text-slate-900 font-medium ${mono ? 'font-mono' : ''}`}>{value || '-'}</span>
     </div>
   );
 }

@@ -1,20 +1,48 @@
 'use client';
-import { Download, Search, CheckCircle2, Clock, X, User, Mail, Phone, MapPin, Briefcase, FileText, IndianRupee, Calendar } from 'lucide-react';
+import { Download, Search, CheckCircle2, Clock, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGetAdminPledgesQuery } from '../../../redux/api/apiSlice';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
 
 export default function UsersPage() {
   const { data, isLoading } = useGetAdminPledgesQuery();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPledge, setSelectedPledge] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'generated', 'pending'
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const pledges = data?.success ? data.pledges : [];
 
-  const filteredPledges = pledges.filter(p => 
-    p.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    p.user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.user?.city?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter & Search Logic
+  const filteredPledges = useMemo(() => {
+    return pledges.filter(p => {
+      const matchesSearch = 
+        p.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        p.user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.user?.city?.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      let matchesStatus = true;
+      if (statusFilter === 'generated') {
+        matchesStatus = p.certificates && p.certificates.length > 0;
+      } else if (statusFilter === 'pending') {
+        matchesStatus = !p.certificates || p.certificates.length === 0;
+      }
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [pledges, searchTerm, statusFilter]);
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredPledges.length / itemsPerPage);
+  const paginatedPledges = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredPledges.slice(start, start + itemsPerPage);
+  }, [filteredPledges, currentPage]);
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
 
   if (isLoading) {
     return (
@@ -38,8 +66,9 @@ export default function UsersPage() {
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-200 bg-slate-100">
-          <div className="relative max-w-md">
+        {/* Filters & Search */}
+        <div className="p-6 border-b border-slate-200 bg-slate-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-slate-500" />
             </div>
@@ -48,11 +77,28 @@ export default function UsersPage() {
               placeholder="Search by name, email, or city..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-slate-100 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
             />
+          </div>
+          
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center gap-2 text-slate-600 font-medium">
+              <Filter size={18} />
+              <span className="hidden sm:inline">Status:</span>
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all cursor-pointer"
+            >
+              <option value="all">All Users</option>
+              <option value="generated">Certificate Generated</option>
+              <option value="pending">Certificate Pending</option>
+            </select>
           </div>
         </div>
         
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-white">
@@ -65,7 +111,7 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
-              {filteredPledges.map((pledge) => (
+              {paginatedPledges.map((pledge) => (
                 <tr key={pledge.id} className="hover:bg-slate-100 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -97,192 +143,54 @@ export default function UsersPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button 
-                      onClick={() => setSelectedPledge(pledge)}
-                      className="text-orange-500 hover:text-orange-400 font-medium text-sm"
+                    <Link 
+                      href={`/admin/users/${pledge.id}`}
+                      className="inline-flex items-center justify-center px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 font-semibold rounded-lg transition-colors border border-orange-200"
                     >
                       View Details
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}
-              {filteredPledges.length === 0 && (
+              {paginatedPledges.length === 0 && (
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center text-slate-500">
-                    No users found matching your search.
+                    No users found matching your search and filters.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* User Detail Modal */}
-      {selectedPledge && (
-        <UserDetailModal 
-          pledge={selectedPledge} 
-          onClose={() => setSelectedPledge(null)} 
-        />
-      )}
-    </div>
-  );
-}
-
-function UserDetailModal({ pledge, onClose }) {
-  const user = pledge.user;
-  const donations = pledge.donations || [];
-  const certificates = pledge.certificates || [];
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-end">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
-      
-      {/* Slide-over Panel */}
-      <div className="relative w-full max-w-lg h-full bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900">User Details</h2>
-          <button 
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-6">
-          {/* User Info Card */}
-          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border border-orange-100">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                {user?.name?.charAt(0)}
+        
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div className="text-sm text-slate-500">
+              Showing <span className="font-semibold text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * itemsPerPage, filteredPledges.length)}</span> of <span className="font-semibold text-slate-900">{filteredPledges.length}</span> results
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg border border-slate-300 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-semibold text-slate-700">
+                Page {currentPage} of {totalPages}
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900">{user?.name}</h3>
-                <p className="text-sm text-slate-600 capitalize">{user?.profession || 'Not specified'}</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <DetailRow icon={Mail} label="Email" value={user?.email} />
-              <DetailRow icon={Phone} label="Mobile" value={user?.mobile} />
-              <DetailRow icon={Briefcase} label="Profession" value={user?.profession || '-'} />
-              <DetailRow icon={MapPin} label="City" value={user?.city || '-'} />
-              <DetailRow icon={MapPin} label="State" value={user?.state || '-'} />
-              <DetailRow icon={Calendar} label="Registered" value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'} />
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg border border-slate-300 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
             </div>
           </div>
-
-          {/* Pledge Info */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
-              <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                <FileText size={16} className="text-orange-500" />
-                Pledge Information
-              </h4>
-            </div>
-            <div className="p-5 space-y-3">
-              <DetailRow icon={Calendar} label="Pledge Date" value={new Date(pledge.pledgeDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
-              <DetailRow icon={FileText} label="Language" value={pledge.language ? pledge.language.charAt(0).toUpperCase() + pledge.language.slice(1) : '-'} />
-              <DetailRow icon={FileText} label="Campaign" value={pledge.campaign?.name || '-'} />
-              {pledge.pledgeText && (
-                <div className="pt-2">
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pledge Text</p>
-                  <p className="text-sm text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-200 leading-relaxed">{pledge.pledgeText}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Certificates */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
-              <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-emerald-500" />
-                Certificates ({certificates.length})
-              </h4>
-            </div>
-            <div className="p-5">
-              {certificates.length > 0 ? (
-                <div className="space-y-3">
-                  {certificates.map((cert) => (
-                    <div key={cert.id} className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                      <div>
-                        <code className="text-xs font-mono bg-white px-2 py-0.5 rounded-md text-slate-700 border border-slate-200">{cert.certificateNumber}</code>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Generated: {new Date(cert.generatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </p>
-                      </div>
-                      <div className={`text-xs font-bold px-2 py-1 rounded-full ${
-                        cert.emailStatus === 'sent' 
-                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' 
-                          : cert.emailStatus === 'failed'
-                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
-                          : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
-                      }`}>
-                        Email: {cert.emailStatus}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-slate-500 text-center py-4">No certificates generated yet.</p>
-              )}
-            </div>
-          </div>
-
-          {/* Donations */}
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
-              <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                <IndianRupee size={16} className="text-emerald-500" />
-                Donations ({donations.length})
-              </h4>
-            </div>
-            <div className="p-5">
-              {donations.length > 0 ? (
-                <div className="space-y-3">
-                  {donations.map((donation) => (
-                    <div key={donation.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <div>
-                        <p className="text-lg font-bold text-emerald-600">₹{donation.amount}</p>
-                        <code className="text-xs text-slate-600">TXN: {donation.transactionId || 'N/A'}</code>
-                        {donation.paymentDate && (
-                          <p className="text-xs text-slate-500 mt-0.5">
-                            {new Date(donation.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                          </p>
-                        )}
-                      </div>
-                      <div className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                        donation.paymentStatus === 'success' 
-                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' 
-                          : donation.paymentStatus === 'failed'
-                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
-                          : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
-                      }`}>
-                        {donation.paymentStatus}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-slate-500 text-center py-4">No donations made.</p>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-    </div>
-  );
-}
-
-function DetailRow({ icon: Icon, label, value }) {
-  return (
-    <div className="flex items-center gap-3">
-      <Icon size={15} className="text-slate-400 flex-shrink-0" />
-      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider w-24 flex-shrink-0">{label}</span>
-      <span className="text-sm text-slate-900 font-medium">{value || '-'}</span>
     </div>
   );
 }
