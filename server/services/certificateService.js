@@ -58,7 +58,7 @@ export const generateCertificate = async (name, certificateNumber, date, languag
 
   // The certificate section is on the right half. (x: 512 to 1024)
   // The visual center of the certificate is slightly shifted, around 785
-  const certCenterX = 785;
+  const certCenterX = 768; // True center of the right pane (512 to 1024)
   
   // Name - Centered vertically around the blank space below "PROUDLY PRESENTED TO"
   // Assuming "PROUDLY PRESENTED TO" is around y = 480, we place name around y = 430
@@ -96,16 +96,23 @@ export const generateCertificate = async (name, certificateNumber, date, languag
   });
 
   // Date and Certificate ID below QR code, drawn in dark blue so it is visible on the cream background
-  page.drawText(`Date: ${date}`, {
-    x: certLeftX + 5,
+  const dateStr = `Date: ${date}`;
+  const idStr = `ID: ${certificateNumber}`;
+  const dateWidth = timesRomanBoldFont.widthOfTextAtSize(dateStr, 10);
+  const idWidth = timesRomanBoldFont.widthOfTextAtSize(idStr, 10);
+  
+  const qrCenterX = certLeftX + (qrSize / 2);
+
+  page.drawText(dateStr, {
+    x: qrCenterX - (dateWidth / 2),
     y: bottomY - 14,
     size: 10,
     font: timesRomanBoldFont,
     color: rgb(0.1, 0.2, 0.4),
   });
 
-  page.drawText(`ID: ${certificateNumber}`, {
-    x: certLeftX + 5,
+  page.drawText(idStr, {
+    x: qrCenterX - (idWidth / 2),
     y: bottomY - 26,
     size: 10,
     font: timesRomanBoldFont,
