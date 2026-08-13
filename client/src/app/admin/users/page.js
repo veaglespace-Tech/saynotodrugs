@@ -1,11 +1,12 @@
 'use client';
-import { Download, Search, CheckCircle2, Clock } from 'lucide-react';
+import { Download, Search, CheckCircle2, Clock, X, User, Mail, Phone, MapPin, Briefcase, FileText, IndianRupee, Calendar } from 'lucide-react';
 import { useGetAdminPledgesQuery } from '../../../redux/api/apiSlice';
 import { useState } from 'react';
 
 export default function UsersPage() {
   const { data, isLoading } = useGetAdminPledgesQuery();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPledge, setSelectedPledge] = useState(null);
 
   const pledges = data?.success ? data.pledges : [];
 
@@ -96,7 +97,12 @@ export default function UsersPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button className="text-orange-500 hover:text-orange-400 font-medium text-sm">View Details</button>
+                    <button 
+                      onClick={() => setSelectedPledge(pledge)}
+                      className="text-orange-500 hover:text-orange-400 font-medium text-sm"
+                    >
+                      View Details
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -111,6 +117,172 @@ export default function UsersPage() {
           </table>
         </div>
       </div>
+
+      {/* User Detail Modal */}
+      {selectedPledge && (
+        <UserDetailModal 
+          pledge={selectedPledge} 
+          onClose={() => setSelectedPledge(null)} 
+        />
+      )}
+    </div>
+  );
+}
+
+function UserDetailModal({ pledge, onClose }) {
+  const user = pledge.user;
+  const donations = pledge.donations || [];
+  const certificates = pledge.certificates || [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-end">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
+      
+      {/* Slide-over Panel */}
+      <div className="relative w-full max-w-lg h-full bg-white shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-slate-900">User Details</h2>
+          <button 
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* User Info Card */}
+          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border border-orange-100">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-700 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                {user?.name?.charAt(0)}
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">{user?.name}</h3>
+                <p className="text-sm text-slate-600 capitalize">{user?.profession || 'Not specified'}</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <DetailRow icon={Mail} label="Email" value={user?.email} />
+              <DetailRow icon={Phone} label="Mobile" value={user?.mobile} />
+              <DetailRow icon={Briefcase} label="Profession" value={user?.profession || '-'} />
+              <DetailRow icon={MapPin} label="City" value={user?.city || '-'} />
+              <DetailRow icon={MapPin} label="State" value={user?.state || '-'} />
+              <DetailRow icon={Calendar} label="Registered" value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'} />
+            </div>
+          </div>
+
+          {/* Pledge Info */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                <FileText size={16} className="text-orange-500" />
+                Pledge Information
+              </h4>
+            </div>
+            <div className="p-5 space-y-3">
+              <DetailRow icon={Calendar} label="Pledge Date" value={new Date(pledge.pledgeDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} />
+              <DetailRow icon={FileText} label="Language" value={pledge.language ? pledge.language.charAt(0).toUpperCase() + pledge.language.slice(1) : '-'} />
+              <DetailRow icon={FileText} label="Campaign" value={pledge.campaign?.name || '-'} />
+              {pledge.pledgeText && (
+                <div className="pt-2">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Pledge Text</p>
+                  <p className="text-sm text-slate-700 bg-slate-50 rounded-xl p-3 border border-slate-200 leading-relaxed">{pledge.pledgeText}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Certificates */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-emerald-500" />
+                Certificates ({certificates.length})
+              </h4>
+            </div>
+            <div className="p-5">
+              {certificates.length > 0 ? (
+                <div className="space-y-3">
+                  {certificates.map((cert) => (
+                    <div key={cert.id} className="flex items-center justify-between p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                      <div>
+                        <code className="text-xs font-mono bg-white px-2 py-0.5 rounded-md text-slate-700 border border-slate-200">{cert.certificateNumber}</code>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Generated: {new Date(cert.generatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </p>
+                      </div>
+                      <div className={`text-xs font-bold px-2 py-1 rounded-full ${
+                        cert.emailStatus === 'sent' 
+                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' 
+                          : cert.emailStatus === 'failed'
+                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
+                          : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
+                      }`}>
+                        Email: {cert.emailStatus}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 text-center py-4">No certificates generated yet.</p>
+              )}
+            </div>
+          </div>
+
+          {/* Donations */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200">
+              <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                <IndianRupee size={16} className="text-emerald-500" />
+                Donations ({donations.length})
+              </h4>
+            </div>
+            <div className="p-5">
+              {donations.length > 0 ? (
+                <div className="space-y-3">
+                  {donations.map((donation) => (
+                    <div key={donation.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+                      <div>
+                        <p className="text-lg font-bold text-emerald-600">₹{donation.amount}</p>
+                        <code className="text-xs text-slate-600">TXN: {donation.transactionId || 'N/A'}</code>
+                        {donation.paymentDate && (
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            {new Date(donation.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        )}
+                      </div>
+                      <div className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                        donation.paymentStatus === 'success' 
+                          ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' 
+                          : donation.paymentStatus === 'failed'
+                          ? 'bg-red-500/10 text-red-600 border border-red-500/20'
+                          : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
+                      }`}>
+                        {donation.paymentStatus}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 text-center py-4">No donations made.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailRow({ icon: Icon, label, value }) {
+  return (
+    <div className="flex items-center gap-3">
+      <Icon size={15} className="text-slate-400 flex-shrink-0" />
+      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider w-24 flex-shrink-0">{label}</span>
+      <span className="text-sm text-slate-900 font-medium">{value || '-'}</span>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getStats, getPledges } from '../controllers/adminController.js';
+import { getStats, getPledges, getAdminProfile, updateAdminProfile } from '../controllers/adminController.js';
 import { updateConfig } from '../controllers/configController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -10,5 +10,8 @@ router.use(protect);
 router.get('/stats', getStats);
 router.get('/pledges', getPledges);
 router.put('/config', updateConfig);
+router.get('/profile', getAdminProfile);
+router.put('/profile', updateAdminProfile);
 
 export default router;
+

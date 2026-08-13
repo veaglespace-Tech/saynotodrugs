@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
-import { LayoutDashboard, Users, IndianRupee, Settings, LogOut, Menu, Sliders } from 'lucide-react';
+import { LayoutDashboard, Users, IndianRupee, UserCog, LogOut, Menu, Sliders } from 'lucide-react';
 import { logout } from '../../redux/slice/appSlice';
 
 export default function AdminLayout({ children }) {
@@ -46,7 +46,7 @@ export default function AdminLayout({ children }) {
     { name: 'Overview', href: '/admin', icon: LayoutDashboard },
     { name: 'Users & Pledges', href: '/admin/users', icon: Users },
     { name: 'Payments', href: '/admin/payments', icon: IndianRupee },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+    { name: 'My Profile', href: '/admin/settings', icon: UserCog },
     { name: 'Site Config', href: '/admin/config', icon: Sliders },
   ];
 

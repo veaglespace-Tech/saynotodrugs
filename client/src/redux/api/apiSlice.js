@@ -12,7 +12,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Campaign', 'Pledge', 'Admin', 'Config'],
+  tagTypes: ['Campaign', 'Pledge', 'Admin', 'Config', 'AdminProfile'],
   endpoints: (builder) => ({
     getCampaigns: builder.query({
       query: () => '/campaigns',
@@ -83,6 +83,20 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Config']
     }),
+
+    // Admin Profile
+    getAdminProfile: builder.query({
+      query: () => '/admin/profile',
+      providesTags: ['AdminProfile']
+    }),
+    updateAdminProfile: builder.mutation({
+      query: (data) => ({
+        url: '/admin/profile',
+        method: 'PUT',
+        body: data
+      }),
+      invalidatesTags: ['AdminProfile']
+    }),
   })
 });
 
@@ -96,5 +110,7 @@ export const {
   useGetAdminStatsQuery,
   useGetAdminPledgesQuery,
   useGetConfigQuery,
-  useUpdateConfigMutation
+  useUpdateConfigMutation,
+  useGetAdminProfileQuery,
+  useUpdateAdminProfileMutation
 } = apiSlice;
