@@ -16,12 +16,17 @@ export const getCampaigns = asyncHandler(async (req, res) => {
     _sum: { amount: true }
   });
 
+  const donorsCount = await prisma.donation.count({
+    where: { paymentStatus: 'success' }
+  });
+
   res.json({ 
     success: true, 
     campaigns,
     stats: {
       totalPledges,
-      totalDonations: totalDonations._sum.amount || 0
+      totalDonations: totalDonations._sum.amount || 0,
+      donorsCount
     }
   });
 });

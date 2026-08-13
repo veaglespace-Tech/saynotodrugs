@@ -53,22 +53,20 @@ function PledgeContent() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex justify-center selection:bg-orange-500/30">
-      <div className="max-w-2xl w-full bg-white rounded-3xl shadow-2xl shadow-black/50 overflow-hidden border border-slate-300">
-        <div className="p-8 sm:p-12">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center mb-6">
-              <img src="/logo.png" alt="Veagle Space Logo" className="h-16 w-auto object-contain" />
-            </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">Take the Pledge</h1>
-            <p className="text-slate-600">Join the movement and receive your official certificate.</p>
+      <div className="max-w-6xl w-full">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center mb-6">
+            <img src="/logo.png" alt="Veagle Space Logo" className="h-16 w-auto object-contain" />
           </div>
-          
-          <PledgeForm 
-            campaignId={campaignId} 
-            siteConfig={siteConfig} 
-            onSuccess={handlePledgeSuccess} 
-          />
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">Take the Pledge</h1>
+          <p className="text-slate-600">Join the movement and receive your official certificate.</p>
         </div>
+        
+        <PledgeForm 
+          campaignId={campaignId} 
+          siteConfig={siteConfig} 
+          onSuccess={handlePledgeSuccess} 
+        />
       </div>
     </div>
   );

@@ -68,10 +68,10 @@ export default function Home() {
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <span className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-emerald-700 mb-2">
-                    ₹{data.stats.totalDonations.toLocaleString()}
+                    {data.stats.donorsCount?.toLocaleString() || 0}
                   </span>
                   <span className="text-sm md:text-base font-bold text-slate-600 uppercase tracking-wider">
-                    Funds Raised
+                    Total Donors
                   </span>
                 </div>
               </div>
