@@ -1,11 +1,12 @@
 'use client';
-import { Download, Search, CheckCircle2, Clock, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Download, Search, CheckCircle2, Clock, Filter, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useGetAdminPledgesQuery } from '../../../redux/api/apiSlice';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
 export default function UsersPage() {
   const { data, isLoading } = useGetAdminPledgesQuery();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'generated', 'pending'
   const [currentPage, setCurrentPage] = useState(1);
@@ -143,12 +144,37 @@ export default function UsersPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link 
-                      href={`/admin/users/${pledge.id}`}
-                      className="inline-flex items-center justify-center px-4 py-2 bg-[#FFF9F2] hover:bg-[#FF9933]/10 text-[#FF9933] font-semibold rounded-lg transition-colors border border-[#FF9933]/20"
-                    >
-                      View Details
-                    </Link>
+                    <div className="flex items-center justify-end gap-2">
+                      <Link 
+                        href={`/admin/users/${pledge.id}`}
+                        className="inline-flex items-center justify-center px-4 py-2 bg-[#FFF9F2] hover:bg-[#FF9933]/10 text-[#FF9933] font-semibold rounded-lg transition-colors border border-[#FF9933]/20"
+                      >
+                        View Details
+                      </Link>
+                      {pledge.certificates && pledge.certificates.length > 0 && (
+                        <>
+                          <a
+                            href={`${apiUrl}/pledges/download/${pledge.certificates[0].certificateNumber}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition-colors border border-slate-200"
+                            title="Preview Certificate"
+                          >
+                            <Eye size={18} />
+                          </a>
+                          <a
+                            href={`${apiUrl}/pledges/download/${pledge.certificates[0].certificateNumber}`}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center px-3 py-2 bg-[#138808]/10 hover:bg-[#138808]/20 text-[#138808] font-semibold rounded-lg transition-colors border border-[#138808]/20"
+                            title="Download Certificate"
+                          >
+                            <Download size={18} />
+                          </a>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

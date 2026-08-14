@@ -5,7 +5,8 @@ import {
   donationSuccess, 
   donationFailure, 
   completePledge, 
-  verifyCertificate 
+  verifyCertificate,
+  downloadCertificate
 } from '../controllers/pledgeController.js';
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.post('/donate/success', donationSuccess);
 router.post('/donate/failure', donationFailure);
 router.post('/complete', completePledge);
 router.get('/verify/:certId', verifyCertificate);
+router.get('/download/:certId', downloadCertificate);
 
 export default router;

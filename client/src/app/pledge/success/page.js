@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 function SuccessContent() {
   const searchParams = useSearchParams();
   const certId = searchParams.get('cert');
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
   return (
     <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center p-4 relative">
@@ -41,9 +42,16 @@ function SuccessContent() {
             </div>
             <p className="text-sm text-[#6b7280] mb-1">Your Certificate ID</p>
             <p className="font-mono font-bold text-xl text-[#1a1a1a] tracking-wider">{certId}</p>
-            <p className="text-xs text-[#FF9933] mt-3 font-medium bg-[#FF9933]/8 py-2 rounded-lg border border-[#FF9933]/15">
-              We have sent the certificate PDF to your email.
-            </p>
+            <a
+              href={`${apiUrl}/pledges/download/${certId}`}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 w-full inline-flex items-center justify-center gap-2 bg-[#FF9933]/10 text-[#FF9933] hover:bg-[#FF9933] hover:text-white font-bold py-2.5 rounded-lg border border-[#FF9933]/20 transition-all"
+            >
+              <FileText size={18} />
+              Download Certificate
+            </a>
           </div>
         )}
 

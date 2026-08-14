@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '../config/prisma.js';
 import { config } from '../config/index.js';
 import { generateCertificate } from '../services/certificateService.js';
-import { sendCertificateEmail } from '../services/emailService.js';
 
 // @desc    Create a pledge
 // @route   POST /api/pledges/create
@@ -95,16 +94,6 @@ export const createPledge = asyncHandler(async (req, res) => {
       verificationToken
     }
   });
-
-  // Send email asynchronously without awaiting to speed up response
-  sendCertificateEmail(user.email, user.name, certNumber, pdfBuffer).then(async (emailSent) => {
-    if (emailSent) {
-      await prisma.certificate.update({
-        where: { id: certificate.id },
-        data: { emailStatus: 'sent' }
-      });
-    }
-  }).catch(console.error);
 
   res.json({ success: true, pledgeId: pledge.id, certificateNumber: certNumber, message: 'Pledge created successfully' });
 });
@@ -246,4 +235,34 @@ export const verifyCertificate = asyncHandler(async (req, res) => {
       status: 'VERIFIED'
     }
   });
+});
+
+// @desc    Download Certificate
+// @route   GET /api/pledges/download/:certId
+// @access  Public
+export const downloadCertificate = asyncHandler(async (req, res) => {
+  const certificate = await prisma.certificate.findUnique({
+    where: { certificateNumber: req.params.certId },
+    include: { pledge: { include: { user: true } } }
+  });
+
+  if (!certificate) {
+    res.status(404);
+    throw new Error('Certificate not found');
+  }
+
+  let config = await prisma.siteConfig.findUnique({ where: { id: 1 } });
+  
+  const dateStr = certificate.generatedAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const pdfBuffer = await generateCertificate(
+    certificate.pledge.user.name,
+    certificate.certificateNumber,
+    dateStr,
+    certificate.pledge.language,
+    config
+  );
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="certificate-${certificate.certificateNumber}.pdf"`);
+  res.send(pdfBuffer);
 });

@@ -22,10 +22,12 @@ export const generateCertificate = async (
 
   const pdfDoc = await PDFDocument.create();
 
-  // Required for custom TTF fonts
   pdfDoc.registerFontkit(fontkit);
 
-  // Standard fonts
+  // ============================================================
+  // FONTS
+  // ============================================================
+
   const timesRomanFont = await pdfDoc.embedFont(
     StandardFonts.TimesRoman
   );
@@ -89,13 +91,13 @@ export const generateCertificate = async (
       );
     }
 
-    const templateBytes =
-      fs.readFileSync(templatePath);
+    const templateBytes = fs.readFileSync(
+      templatePath
+    );
 
     const templateImage =
       await pdfDoc.embedJpg(templateBytes);
 
-    // Full template background
     page.drawImage(templateImage, {
       x: 0,
       y: 0,
@@ -108,7 +110,6 @@ export const generateCertificate = async (
       error
     );
 
-    // Fallback background
     page.drawRectangle({
       x: 0,
       y: 0,
@@ -124,22 +125,6 @@ export const generateCertificate = async (
 
   // ============================================================
   // CERTIFICATE AREA
-  // ============================================================
-  //
-  // The uploaded template is 1024 x 683.
-  //
-  // Left side:
-  //   Pledge content
-  //
-  // Right side:
-  //   Certificate
-  //
-  // The right certificate panel visually starts around x=400
-  // and ends around x=1015.
-  //
-  // Actual visual center:
-  //   ~707
-  //
   // ============================================================
 
   const CERT_LEFT = 400;
@@ -160,40 +145,9 @@ export const generateCertificate = async (
     ? customFont
     : timesRomanBoldFont;
 
-  /*
-   * IMPORTANT:
-   *
-   * PDF coordinate system starts from bottom-left.
-   *
-   * In the original code:
-   *
-   *   y = height * 0.62
-   *
-   * the name was ending up too low / misaligned.
-   *
-   * New position places the name between:
-   *
-   *   PROUDLY PRESENTED TO
-   *
-   * and
-   *
-   *   horizontal decorative line
-   */
-
   const NAME_Y = 431;
 
-  /*
-   * Maximum width available for the name.
-   *
-   * This prevents long names from touching
-   * the decorative borders.
-   */
-
   const MAX_NAME_WIDTH = 350;
-
-  /*
-   * Start with 34pt.
-   */
 
   let nameSize = 34;
 
@@ -203,11 +157,8 @@ export const generateCertificate = async (
       nameSize
     );
 
-  /*
-   * Automatically reduce font size
-   * for long names.
-   */
-
+  // Automatically reduce font size
+  // for long names
   while (
     nameWidth > MAX_NAME_WIDTH &&
     nameSize > 20
@@ -220,10 +171,6 @@ export const generateCertificate = async (
         nameSize
       );
   }
-
-  /*
-   * Final centered X position.
-   */
 
   const nameX =
     CERT_CENTER_X -
@@ -253,19 +200,16 @@ export const generateCertificate = async (
     `${clientUrl}/verify/${certificateNumber}`;
 
   // ============================================================
-  // QR CODE
+  // GENERATE QR CODE
   // ============================================================
 
   const qrDataUrl =
     await QRCode.toDataURL(
       verifyUrl,
       {
-        margin: 1,
-
-        // High error correction makes the QR
-        // more reliable when printed.
         errorCorrectionLevel: 'H',
-
+        margin: 1,
+        width: 300,
         color: {
           dark: '#0a192f',
           light: '#ffffff',
@@ -290,25 +234,24 @@ export const generateCertificate = async (
   //
   // IMPORTANT:
   //
-  // The CEO signature is already part of
-  // certificate_full.jpg.
+  // This position matches the QR location
+  // from the reference certificate image.
   //
-  // Original QR:
+  // Template size:
+  // 1024 x 683
   //
-  //   x = 885
-  //   y = 85
+  // QR:
+  // X    = 443
+  // Y    = 82
+  // Size = 65
   //
-  // This overlaps the signature.
-  //
-  // New QR is moved to the empty area
-  // LEFT of the signature.
+  // PDF coordinates start from bottom-left.
   //
   // ============================================================
 
-  const QR_SIZE = 62;
-
-  const QR_X = 755;
-  const QR_Y = 83;
+  const QR_X = 443;
+  const QR_Y = 82;
+  const QR_SIZE = 65;
 
   page.drawImage(qrImage, {
     x: QR_X,
@@ -321,11 +264,8 @@ export const generateCertificate = async (
   // DATE + CERTIFICATE ID
   // ============================================================
 
-  const dateText =
-    `Date: ${date}`;
-
-  const idText =
-    `ID: ${certificateNumber}`;
+  const dateText = `Date: ${date}`;
+  const idText = `ID: ${certificateNumber}`;
 
   const META_FONT_SIZE = 9;
 
@@ -341,13 +281,10 @@ export const generateCertificate = async (
       META_FONT_SIZE
     );
 
-  /*
-   * Center Date + ID under QR.
-   */
+  // Center Date and ID exactly under QR
 
   const qrCenterX =
-    QR_X +
-    QR_SIZE / 2;
+    QR_X + QR_SIZE / 2;
 
   // ============================================================
   // DATE
@@ -380,7 +317,7 @@ export const generateCertificate = async (
       qrCenterX -
       idWidth / 2,
 
-    y: QR_Y - 25,
+    y: QR_Y - 26,
 
     size: META_FONT_SIZE,
 
