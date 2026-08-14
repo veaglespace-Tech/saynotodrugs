@@ -44,10 +44,22 @@ export const createPledge = asyncHandler(async (req, res) => {
     throw new Error('This email is already registered. Please use a different email.');
   }
 
+  let campaignToUse = parseInt(campaignId);
+  const campaignExists = await prisma.campaign.findUnique({ where: { id: campaignToUse } });
+  
+  if (!campaignExists) {
+    const firstActive = await prisma.campaign.findFirst({ where: { status: 'active' } });
+    if (!firstActive) {
+      res.status(400);
+      throw new Error('No active campaign found. Please contact administrator.');
+    }
+    campaignToUse = firstActive.id;
+  }
+
   const pledge = await prisma.pledge.create({
     data: {
       userId: user.id,
-      campaignId: parseInt(campaignId),
+      campaignId: campaignToUse,
       pledgeText: pledgeText || 'I pledge to say NO to drugs.',
       language
     }
