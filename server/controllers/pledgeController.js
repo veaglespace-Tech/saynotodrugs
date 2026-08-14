@@ -30,20 +30,7 @@ export const createPledge = asyncHandler(async (req, res) => {
     throw new Error('Invalid email format. Please provide a valid email address.');
   }
 
-  let user = await prisma.user.findFirst({
-    where: { email }
-  });
-
-  if (!user) {
-    user = await prisma.user.create({
-      data: { name, mobile, email, profession, city, state }
-    });
-  } else {
-    // If user exists, block them from pledging again with the same email
-    res.status(400);
-    throw new Error('This email is already registered. Please use a different email.');
-  }
-
+  // Validate campaign exists BEFORE creating user to prevent orphaned users
   let campaignToUse = parseInt(campaignId);
   const campaignExists = await prisma.campaign.findUnique({ where: { id: campaignToUse } });
   
@@ -54,6 +41,25 @@ export const createPledge = asyncHandler(async (req, res) => {
       throw new Error('No active campaign found. Please contact administrator.');
     }
     campaignToUse = firstActive.id;
+  }
+
+  let user = await prisma.user.findFirst({
+    where: { email }
+  });
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: { name, mobile, email, profession, city, state }
+    });
+  } else {
+    const existingPledge = await prisma.pledge.findFirst({
+      where: { userId: user.id, campaignId: campaignToUse }
+    });
+    
+    if (existingPledge) {
+      res.status(400);
+      throw new Error('This email is already registered for this pledge. Please use a different email.');
+    }
   }
 
   const pledge = await prisma.pledge.create({
