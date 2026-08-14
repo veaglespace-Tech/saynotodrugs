@@ -65,7 +65,7 @@ function PledgeContent() {
           </Link>
         </div>
         <div className="text-center mb-10 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#FF9933]/20 text-sm font-semibold text-[#1a1a1a] mb-4 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white border border-[#FF9933]/20 text-xs sm:text-sm font-semibold text-[#1a1a1a] mb-4 shadow-sm whitespace-nowrap">
             <Flag size={14} className="text-[#FF9933]" />
             Independence Day 2026 Special
           </div>

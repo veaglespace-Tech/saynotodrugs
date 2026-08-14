@@ -41,7 +41,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
 
           {/* Independence Day Badge */}
-          <div className="animate-fade-in-up inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#FFF9F2] border border-[#FF9933]/20 text-[#1a1a1a] font-semibold text-sm mb-8 shadow-sm">
+          <div className="animate-fade-in-up inline-flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#FFF9F2] border border-[#FF9933]/20 text-[#1a1a1a] font-semibold text-xs sm:text-sm mb-8 shadow-sm whitespace-nowrap">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#FF9933]" />
               <span className="w-2 h-2 rounded-full bg-white border border-gray-200" />
@@ -106,7 +106,7 @@ export default function Home() {
       </main>
 
       {/* Why This Matters Section */}
-      <section className="py-24 bg-[#FAFAFA] relative">
+      <section className="py-12 md:py-16 bg-[#FAFAFA] relative">
         {/* Tricolor top line */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-[#FAFAFA] to-[#138808]" />
 
@@ -140,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* Motivational Quote Section */}
-      <section className="py-20 bg-white relative overflow-hidden">
+      <section className="py-10 md:py-12 bg-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.02]">
           <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow" fill="none">
             <circle cx="100" cy="100" r="90" stroke="#000080" strokeWidth="1" />
@@ -151,14 +151,14 @@ export default function Home() {
         </div>
 
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <div className="flex items-center justify-center gap-1.5 mb-6">
+          <div className="flex items-center justify-center gap-1.5 mb-4 md:mb-6">
             <Star className="text-[#FF9933] fill-[#FF9933]" size={18} />
             <Star className="text-[#D4A017] fill-[#D4A017]" size={18} />
             <Star className="text-[#138808] fill-[#138808]" size={18} />
           </div>
           <blockquote className="text-2xl md:text-4xl font-black text-[#1a1a1a] leading-snug tracking-tight mb-6">
-            "Freedom is not worth having if it does not include the freedom to make mistakes —
-            <span className="text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]"> but choosing drugs is never a mistake worth making.</span>"
+            "Freedom is not worth having if it does not include the freedom to make mistakes —<br />
+            <span className="text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]">but choosing drugs is never a mistake worth making.</span>"
           </blockquote>
           {/* <p className="text-[#6b7280] font-medium text-lg">— Inspired by Mahatma Gandhi</p> */}
         </div>
