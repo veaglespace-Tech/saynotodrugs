@@ -4,24 +4,24 @@ import { useInitDonationMutation, useCompletePledgeMutation } from '../../redux/
 export default function DonationForm({ pledgeId }) {
   const [donationAmount, setDonationAmount] = useState(500);
   const [customAmount, setCustomAmount] = useState('');
-  
+
   const [initDonation, { isLoading: isDonating }] = useInitDonationMutation();
   const [completePledge, { isLoading: isCompleting }] = useCompletePledgeMutation();
 
   const handleDonate = async () => {
     const amount = customAmount ? parseFloat(customAmount) : donationAmount;
     if (!amount || amount <= 0) return;
-    
+
     try {
       const res = await initDonation({ pledgeId, amount }).unwrap();
-      
+
       if (res.success) {
         const pd = res.payuData;
-        
+
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = pd.url || process.env.NEXT_PUBLIC_PAYU_URL || 'https://test.payu.in/_payment';
-        
+
         const inputs = {
           key: pd.key,
           txnid: pd.txnid,
@@ -34,7 +34,7 @@ export default function DonationForm({ pledgeId }) {
           furl: pd.furl,
           hash: pd.hash
         };
-        
+
         for (const key in inputs) {
           const input = document.createElement('input');
           input.type = 'hidden';
@@ -42,7 +42,7 @@ export default function DonationForm({ pledgeId }) {
           input.value = inputs[key];
           form.appendChild(input);
         }
-        
+
         document.body.appendChild(form);
         form.submit();
       }
@@ -70,40 +70,39 @@ export default function DonationForm({ pledgeId }) {
           <button
             key={amt}
             onClick={() => { setDonationAmount(amt); setCustomAmount(''); }}
-            className={`py-3 px-4 rounded-xl font-bold border-2 transition-all ${
-              donationAmount === amt && !customAmount
-                ? 'border-orange-500 bg-orange-500/10 text-orange-400'
-                : 'border-slate-300 text-slate-600 hover:border-white/20'
-            }`}
+            className={`py-3 px-4 rounded-xl font-bold border-2 transition-all ${donationAmount === amt && !customAmount
+                ? 'border-[#FF9933] bg-[#FF9933]/10 text-[#E6852E] shadow-sm'
+                : 'border-gray-200 text-[#4a4a4a] hover:border-[#FF9933]/30 bg-white'
+              }`}
           >
             ₹{amt}
           </button>
         ))}
       </div>
-      
+
       <div className="mb-8">
-        <label className="block text-sm font-medium text-slate-600 mb-2">Other Amount (₹)</label>
+        <label className="block text-sm font-medium text-[#4a4a4a] mb-2">Other Amount (₹)</label>
         <input
           type="number"
           value={customAmount}
           onChange={(e) => { setCustomAmount(e.target.value); setDonationAmount(0); }}
-          className="w-full rounded-xl bg-slate-100 border-slate-300 px-4 py-3 border focus:border-orange-500 outline-none text-slate-900"
+          className="w-full rounded-xl bg-[#FAFAFA] border-gray-200 px-4 py-3 border focus:border-[#FF9933] outline-none text-[#1a1a1a]"
           placeholder="Enter custom amount"
         />
       </div>
-      
+
       <div className="flex flex-col gap-3">
         <button
           onClick={handleDonate}
           disabled={isDonating || isCompleting}
-          className="w-full bg-orange-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_-5px_rgba(249,115,22,0.5)] hover:bg-orange-500 transition-all disabled:opacity-70"
+          className="w-full bg-[#FF9933] text-white font-bold py-4 rounded-xl shadow-[0_0_25px_-5px_rgba(255,153,51,0.5)] hover:bg-[#E6852E] hover:-translate-y-0.5 transition-all disabled:opacity-70"
         >
           {isDonating ? 'PROCESSING...' : 'DONATE NOW'}
         </button>
         <button
           onClick={handleNoThanks}
           disabled={isCompleting || isDonating}
-          className="w-full bg-slate-100 text-slate-700 font-medium py-4 rounded-xl border border-slate-300 hover:bg-slate-200 transition-all disabled:opacity-70"
+          className="w-full bg-[#FAFAFA] text-[#4a4a4a] font-medium py-4 rounded-xl border border-gray-200 hover:bg-gray-100 transition-all disabled:opacity-70"
         >
           {isCompleting ? 'PLEASE WAIT...' : 'NO, THANK YOU'}
         </button>

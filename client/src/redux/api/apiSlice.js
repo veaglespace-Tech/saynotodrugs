@@ -53,6 +53,13 @@ export const apiSlice = createApi({
         body: credentials
       })
     }),
+    adminVerifyOtp: builder.mutation({
+      query: (credentials) => ({
+        url: '/auth/verify-otp',
+        method: 'POST',
+        body: credentials
+      })
+    }),
 
     // Protected Admin Routes
     getAdminStats: builder.query({
@@ -107,6 +114,7 @@ export const {
   useCompletePledgeMutation,
   useVerifyCertificateQuery,
   useAdminLoginMutation,
+  useAdminVerifyOtpMutation,
   useGetAdminStatsQuery,
   useGetAdminPledgesQuery,
   useGetConfigQuery,

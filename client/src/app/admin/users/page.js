@@ -47,19 +47,19 @@ export default function UsersPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF9933]"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Users & Pledges</h1>
           <p className="text-slate-600 mt-1">Manage and export all campaign participants.</p>
         </div>
-        <button className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-orange-900/20">
+        <button className="flex items-center gap-2 bg-[#FF9933] hover:bg-[#E6852E] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-[#FF9933]/20">
           <Download size={18} />
           <span>Export CSV</span>
         </button>
@@ -77,7 +77,7 @@ export default function UsersPage() {
               placeholder="Search by name, email, or city..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+              className="block w-full pl-11 pr-4 py-3 border border-gray-200 bg-white rounded-xl text-[#1a1a1a] placeholder-[#9ca3af] focus:ring-2 focus:ring-[#FF9933] focus:border-transparent outline-none transition-all"
             />
           </div>
           
@@ -89,7 +89,7 @@ export default function UsersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all cursor-pointer"
+              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-gray-200 bg-white rounded-xl text-[#1a1a1a] focus:ring-2 focus:ring-[#FF9933] focus:border-transparent outline-none transition-all cursor-pointer"
             >
               <option value="all">All Users</option>
               <option value="generated">Certificate Generated</option>
@@ -115,7 +115,7 @@ export default function UsersPage() {
                 <tr key={pledge.id} className="hover:bg-slate-100 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold border border-orange-500/20">
+                      <div className="h-10 w-10 rounded-full bg-[#FF9933]/15 text-[#FF9933] flex items-center justify-center font-bold border border-[#FF9933]/20">
                         {pledge.user?.name.charAt(0)}
                       </div>
                       <div>
@@ -145,7 +145,7 @@ export default function UsersPage() {
                   <td className="px-6 py-4 text-right">
                     <Link 
                       href={`/admin/users/${pledge.id}`}
-                      className="inline-flex items-center justify-center px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-600 font-semibold rounded-lg transition-colors border border-orange-200"
+                      className="inline-flex items-center justify-center px-4 py-2 bg-[#FFF9F2] hover:bg-[#FF9933]/10 text-[#FF9933] font-semibold rounded-lg transition-colors border border-[#FF9933]/20"
                     >
                       View Details
                     </Link>

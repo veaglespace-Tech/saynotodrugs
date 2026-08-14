@@ -11,7 +11,7 @@ model User {
   id         Int      @id @default(autoincrement())
   name       String
   mobile     String
-  email      String
+  email      String   @unique
   profession String?
   city       String?
   state      String?
@@ -85,6 +85,8 @@ model AdminUser {
   email        String   @unique
   role         String   @default("campaign_manager") // super_admin, campaign_manager, finance_admin, content_admin
   passwordHash String
+  otp          String?
+  otpExpiresAt DateTime?
   createdAt    DateTime @default(now())
 
   @@map("admin_users")

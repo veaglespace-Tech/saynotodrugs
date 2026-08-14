@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Save, Languages, Shield, FileText } from 'lucide-react';
 import { useGetConfigQuery, useUpdateConfigMutation } from '../../../redux/api/apiSlice';
+import { defaultPledgeEnglish, defaultPledgeHindi, defaultPledgeMarathi } from '../../../constants/pledgeTexts';
 
 export default function SiteConfigPage() {
   const { data, isLoading } = useGetConfigQuery();
@@ -20,11 +21,11 @@ export default function SiteConfigPage() {
   useEffect(() => {
     if (data?.config) {
       setFormData({
-        donationUsage: data.config.donationUsage || '',
-        pledgeEnglish: data.config.pledgeEnglish || '',
-        pledgeHindi: data.config.pledgeHindi || '',
-        pledgeMarathi: data.config.pledgeMarathi || '',
-        certificateFormat: data.config.certificateFormat || ''
+        donationUsage: data.config.donationUsage || 'Your donations will be utilized for conducting De-addiction drives, supporting rehabilitation centers, and promoting Women Safety initiatives.',
+        pledgeEnglish: data.config.pledgeEnglish || defaultPledgeEnglish.join('\n'),
+        pledgeHindi: data.config.pledgeHindi || defaultPledgeHindi.join('\n'),
+        pledgeMarathi: data.config.pledgeMarathi || defaultPledgeMarathi.join('\n'),
+        certificateFormat: data.config.certificateFormat || 'This certificate is proudly presented to {name} for taking the Say No to Drugs Pledge.'
       });
     }
   }, [data]);

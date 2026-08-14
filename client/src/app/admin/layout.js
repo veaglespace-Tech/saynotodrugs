@@ -33,45 +33,47 @@ export default function AdminLayout({ children }) {
 
   if (!mounted) {
     // Avoid hydration mismatch by returning a placeholder or empty div with same structure
-    return <div className="h-screen overflow-hidden bg-slate-50 flex"></div>;
+    return <div className="h-screen overflow-hidden bg-[#FAFAFA] flex"></div>;
   }
 
   if (isLoginPage) {
     return <>{children}</>;
   }
 
-  if (!token) return <div className="h-screen overflow-hidden bg-slate-50 flex"></div>; // Wait for redirect
+  if (!token) return <div className="h-screen overflow-hidden bg-[#FAFAFA] flex"></div>; // Wait for redirect
 
   const navItems = [
     { name: 'Overview', href: '/admin', icon: LayoutDashboard },
     { name: 'Users & Pledges', href: '/admin/users', icon: Users },
     { name: 'Payments', href: '/admin/payments', icon: IndianRupee },
-    { name: 'My Profile', href: '/admin/settings', icon: UserCog },
     { name: 'Site Config', href: '/admin/config', icon: Sliders },
   ];
 
   return (
-    <div className="h-screen overflow-hidden bg-slate-50 flex selection:bg-orange-500/30">
+    <div className="h-screen overflow-hidden bg-[#FAFAFA] flex">
       
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 z-20 md:hidden" 
+          className="fixed inset-0 bg-[#1a1a1a]/50 z-20 md:hidden" 
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-30 flex flex-col w-72 bg-white border-r border-slate-200 text-slate-700 transform transition-transform duration-300 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="h-20 flex items-center px-8 border-b border-slate-200">
-          <div className="flex items-center gap-3 text-slate-900">
+      <aside className={`fixed inset-y-0 left-0 z-30 flex flex-col w-72 bg-white border-r border-gray-200 text-[#4a4a4a] transform transition-transform duration-300 md:relative md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Tricolor top accent */}
+        <div className="h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
+        
+        <div className="h-20 flex items-center px-8 border-b border-gray-100">
+          <div className="flex items-center gap-3 text-[#1a1a1a]">
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
             <span className="text-xl font-bold tracking-tight">Say No to Drugs</span>
           </div>
         </div>
 
         <div className="flex-1 py-8 px-4 overflow-y-auto space-y-2">
-          <div className="px-4 mb-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <div className="px-4 mb-4 text-xs font-semibold text-[#6b7280] uppercase tracking-wider">
             Menu
           </div>
           {navItems.map((item) => {
@@ -82,27 +84,27 @@ export default function AdminLayout({ children }) {
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive 
-                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/20' 
-                  : 'hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-[#FF9933] text-white shadow-lg shadow-[#FF9933]/20' 
+                  : 'hover:bg-[#FFF9F2] hover:text-[#1a1a1a]'
                 }`}
               >
-                <Icon size={20} className={isActive ? 'text-white' : 'text-slate-500'} />
+                <Icon size={20} className={isActive ? 'text-white' : 'text-[#6b7280]'} />
                 <span className="font-medium">{item.name}</span>
               </Link>
             );
           })}
         </div>
 
-        <div className="p-4 border-t border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 rounded-xl mb-4 border border-slate-200">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-700 rounded-full flex items-center justify-center text-white font-bold shadow-inner">
+        <div className="p-4 border-t border-gray-200">
+          <Link href="/admin/settings" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-[#FFF9F2] rounded-xl mb-4 border border-[#FF9933]/10 hover:bg-[#FF9933]/10 transition-colors cursor-pointer">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#FF9933] to-[#138808] rounded-full flex items-center justify-center text-white font-bold shadow-inner">
               {adminUser?.name?.charAt(0) || 'A'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-slate-900 truncate">{adminUser?.name || 'Admin'}</p>
-              <p className="text-xs text-slate-600 truncate">{adminUser?.role || 'Super Admin'}</p>
+              <p className="text-sm font-bold text-[#1a1a1a] truncate">{adminUser?.name || 'Admin'}</p>
+              <p className="text-xs text-[#6b7280] truncate">{adminUser?.role || 'Super Admin'}</p>
             </div>
-          </div>
+          </Link>
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all"
@@ -114,16 +116,18 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden text-slate-700">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden text-[#4a4a4a]">
         {/* Mobile Header */}
-        <header className="md:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4">
-          <div className="flex items-center gap-2 text-slate-900">
+        <header className="md:hidden h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 relative">
+          {/* Tricolor accent */}
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
+          <div className="flex items-center gap-2 text-[#1a1a1a]">
             <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
             <span className="font-bold tracking-tight">Say No to Drugs</span>
           </div>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="text-slate-600 hover:text-slate-900 transition-colors p-2"
+            className="text-[#4a4a4a] hover:text-[#1a1a1a] transition-colors p-2"
           >
             <Menu size={24} />
           </button>

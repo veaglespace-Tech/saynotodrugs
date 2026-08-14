@@ -54,19 +54,19 @@ export default function PaymentsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#138808]"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-7xl mx-auto space-y-8 animate-fade-in-up">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Payments & Donations</h1>
           <p className="text-slate-600 mt-1">Track all contributions made towards the campaign.</p>
         </div>
-        <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)]">
+        <button className="flex items-center gap-2 bg-[#138808] hover:bg-[#0F6B06] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-[0_0_20px_-5px_rgba(19,136,8,0.4)]">
           <Download size={18} />
           <span>Export Receipts</span>
         </button>
@@ -84,7 +84,7 @@ export default function PaymentsPage() {
               placeholder="Search by donor name or TXN ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="block w-full pl-11 pr-4 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+              className="block w-full pl-11 pr-4 py-3 border border-gray-200 bg-white rounded-xl text-[#1a1a1a] placeholder-[#9ca3af] focus:ring-2 focus:ring-[#138808] focus:border-transparent outline-none transition-all"
             />
           </div>
           
@@ -96,7 +96,7 @@ export default function PaymentsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-slate-300 bg-white rounded-xl text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all cursor-pointer"
+              className="flex-1 md:w-auto block w-full pl-4 pr-10 py-3 border border-gray-200 bg-white rounded-xl text-[#1a1a1a] focus:ring-2 focus:ring-[#138808] focus:border-transparent outline-none transition-all cursor-pointer"
             >
               <option value="all">All Payments</option>
               <option value="success">Success</option>
@@ -127,7 +127,7 @@ export default function PaymentsPage() {
                     <div className="text-sm text-slate-600">{donation.user?.email}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-lg font-bold text-emerald-500">₹{donation.amount}</div>
+                    <div className="text-lg font-bold text-[#138808]">₹{donation.amount}</div>
                   </td>
                   <td className="px-6 py-4">
                     <code className="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded-md border border-slate-300">
@@ -155,7 +155,7 @@ export default function PaymentsPage() {
                   <td className="px-6 py-4 text-right">
                     <Link 
                       href={`/admin/payments/${donation.id}`}
-                      className="inline-flex items-center justify-center px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 font-semibold rounded-lg transition-colors border border-emerald-200"
+                      className="inline-flex items-center justify-center px-4 py-2 bg-[#138808]/5 hover:bg-[#138808]/10 text-[#138808] font-semibold rounded-lg transition-colors border border-[#138808]/20"
                     >
                       View Details
                     </Link>

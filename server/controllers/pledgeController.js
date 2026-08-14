@@ -23,11 +23,11 @@ export const createPledge = asyncHandler(async (req, res) => {
     throw new Error('Mobile number must be exactly 10 digits');
   }
 
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Strict email validation (RFC 5322 standard-like)
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!emailRegex.test(email)) {
     res.status(400);
-    throw new Error('Invalid email format');
+    throw new Error('Invalid email format. Please provide a valid email address.');
   }
 
   let user = await prisma.user.findFirst({
@@ -38,6 +38,10 @@ export const createPledge = asyncHandler(async (req, res) => {
     user = await prisma.user.create({
       data: { name, mobile, email, profession, city, state }
     });
+  } else {
+    // If user exists, block them from pledging again with the same email
+    res.status(400);
+    throw new Error('This email is already registered. Please use a different email.');
   }
 
   const pledge = await prisma.pledge.create({
