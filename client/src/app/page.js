@@ -10,25 +10,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-[#1a1a1a]">
 
-      {/* Tricolor Top Accent Bar */}
-      <div className="w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] fixed top-0 z-50" />
 
-      {/* Navbar */}
-      <nav className="fixed top-1.5 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center gap-2">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <img src="/logo.png" alt="Veagle Space Logo" className="h-10 sm:h-14 w-auto object-contain" />
-            <span className="text-base sm:text-lg font-bold text-[#1a1a1a] tracking-tight">Say No To Drugs</span>
-          </div>
-          <Link
-            href="/pledge"
-            className="flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 bg-[#FF9933] hover:bg-[#E6852E] text-white font-bold rounded-xl transition-all text-xs sm:text-sm shadow-lg shadow-[#FF9933]/20 hover:-translate-y-0.5 whitespace-nowrap"
-          >
-            Take Pledge
-            <ArrowRight size={16} />
-          </Link>
-        </div>
-      </nav>
 
       {/* Hero Section with Flag Background */}
       <main className="relative pt-28 pb-20 lg:pt-36 lg:pb-32 overflow-hidden flag-bg min-h-[90vh] flex items-center">
@@ -71,14 +53,14 @@ export default function Home() {
           {/* Main Heading */}
           <h1 className="animate-fade-in-up-delay-1 text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-[#1a1a1a] tracking-tighter mb-6 leading-[1.05]">
             Drug-Free India, <br />
-            <span className="text-tricolor-shimmer">
+            <span className="text-tricolor-shimmer drop-shadow-[3px_3px_0_#1a1a1a]">
               Our Pledge.
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="animate-fade-in-up-delay-2 text-lg md:text-xl text-[#4a4a4a] max-w-2xl mx-auto mb-10 leading-relaxed">
-            {campaign?.description || 'This Independence Day, take a stand against substance abuse. Pledge to build a healthier, stronger, and drug-free India for our future generations.'}
+            {campaign?.description || 'This Independence Day, claim true freedom. Pledge to build a healthier, stronger, and drug-free India. Join the national movement and secure your official certificate today.'}
           </p>
 
           {/* CTA Button */}
@@ -88,14 +70,14 @@ export default function Home() {
               className="group flex items-center justify-center gap-2.5 w-full sm:w-auto px-10 py-5 bg-[#FF9933] hover:bg-[#E6852E] text-white font-bold text-lg rounded-2xl transition-all shadow-[0_0_50px_-12px_rgba(255,153,51,0.5)] hover:shadow-[0_0_60px_-10px_rgba(255,153,51,0.6)] hover:-translate-y-1 animate-pulse-glow"
             >
               <Flag size={22} />
-              Take the Pledge
+              <span className="[text-shadow:1.5px_1.5px_0_#1a1a1a]">Take a Pledge</span>
               <ArrowRight className="group-hover:translate-x-1.5 transition-transform" size={20} />
             </Link>
           </div>
 
           {/* Stats Card */}
           {data?.stats && (
-            <div className="animate-fade-in-up-delay-5 mt-16 mx-auto max-w-2xl glass-card-strong rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            <div className="animate-fade-in-up-delay-5 mt-16 mx-auto max-w-2xl glass-card-strong rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl hover:shadow-[#FF9933]/15 hover:-translate-y-2 transition-all duration-500 relative overflow-hidden group">
               {/* Tricolor top border */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
@@ -130,7 +112,7 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-[#1a1a1a] tracking-tight mb-4">Why This Matters</h2>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4 text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]">Why This Matters</h2>
             <p className="text-[#6b7280] max-w-xl mx-auto">Our freedom is not just from foreign rule — it's freedom from every chain that holds our nation back.</p>
           </div>
 
@@ -176,22 +158,11 @@ export default function Home() {
           </div>
           <blockquote className="text-2xl md:text-4xl font-black text-[#1a1a1a] leading-snug tracking-tight mb-6">
             "Freedom is not worth having if it does not include the freedom to make mistakes —
-            <span className="text-tricolor"> but choosing drugs is never a mistake worth making.</span>"
+            <span className="text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]"> but choosing drugs is never a mistake worth making.</span>"
           </blockquote>
-          <p className="text-[#6b7280] font-medium text-lg">— Inspired by Mahatma Gandhi</p>
+          {/* <p className="text-[#6b7280] font-medium text-lg">— Inspired by Mahatma Gandhi</p> */}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="py-12 bg-[#1a1a1a] text-white relative">
-        {/* Tricolor top accent */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
-
-        <div className="max-w-7xl mx-auto px-6 text-center">
-
-          <p className="text-gray-400 text-sm">Designed & Developed by <a href="https://veaglespace.com" target="_blank" rel="noopener noreferrer" className="text-[#FF9933] hover:text-[#FFB366] transition-colors underline underline-offset-2">Veagle Space Technology Pvt. Ltd.</a> © {new Date().getFullYear()} All Rights Reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
@@ -221,8 +192,8 @@ function FeatureCard({ icon: Icon, title, desc, color }) {
   const c = colorMap[color];
 
   return (
-    <div className={`p-8 rounded-3xl bg-white border border-gray-200 shadow-sm hover:shadow-xl ${c.borderHover} ${c.shadowHover} transition-all duration-300 group`}>
-      <div className={`w-14 h-14 ${c.iconBg} ${c.iconColor} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+    <div className={`p-8 rounded-3xl bg-white border border-gray-100 shadow-md hover:shadow-2xl hover:-translate-y-2 ${c.borderHover} ${c.shadowHover} transition-all duration-300 group`}>
+      <div className={`w-14 h-14 ${c.iconBg} ${c.iconColor} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
         <Icon size={28} />
       </div>
       <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">{title}</h3>

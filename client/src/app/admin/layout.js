@@ -65,9 +65,9 @@ export default function AdminLayout({ children }) {
         {/* Tricolor top accent */}
         <div className="h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
         
-        <div className="h-20 flex items-center px-8 border-b border-gray-100">
+        <div className="h-24 flex items-center px-8 border-b border-gray-100">
           <div className="flex items-center gap-3 text-[#1a1a1a]">
-            <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
+            <img src="/logo.webp" alt="Veagle Space Logo" className="h-16 w-auto object-contain animate-coin-flip" />
             <span className="text-xl font-bold tracking-tight">Say No to Drugs</span>
           </div>
         </div>
@@ -118,11 +118,11 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden text-[#4a4a4a]">
         {/* Mobile Header */}
-        <header className="md:hidden h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 relative">
+        <header className="md:hidden h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 relative">
           {/* Tricolor accent */}
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
           <div className="flex items-center gap-2 text-[#1a1a1a]">
-            <img src="/logo.png" alt="Veagle Space Logo" className="h-8 w-auto object-contain" />
+            <img src="/logo.webp" alt="Veagle Space Logo" className="h-14 w-auto object-contain animate-coin-flip" />
             <span className="font-bold tracking-tight">Say No to Drugs</span>
           </div>
           <button 

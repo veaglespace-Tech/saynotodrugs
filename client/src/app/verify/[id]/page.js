@@ -26,10 +26,7 @@ export default function VerifyPage({ params }) {
   const isVerified = data?.success;
 
   return (
-    <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center p-4 relative">
-      {/* Tricolor top bar */}
-      <div className="fixed top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] z-50" />
-      
+    <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center p-4 pt-28 pb-12 relative">
       <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-2xl shadow-[#FF9933]/10 text-center border border-gray-200 relative overflow-hidden animate-scale-in">
         {/* Tricolor top accent */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
@@ -42,7 +39,7 @@ export default function VerifyPage({ params }) {
             <div className="w-20 h-20 bg-[#138808]/10 border border-[#138808]/20 text-[#138808] rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 shadow-[0_0_25px_-5px_rgba(19,136,8,0.3)]">
               <ShieldCheck size={40} />
             </div>
-            <h1 className="text-3xl font-black text-[#1a1a1a] mb-2 relative z-10">Verified! 🇮🇳</h1>
+            <h1 className="text-3xl font-black mb-2 relative z-10 text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]">Verified! 🇮🇳</h1>
             <p className="text-[#4a4a4a] mb-8 relative z-10 leading-relaxed">
               This certificate is authentic and registered in our database.
             </p>

@@ -28,7 +28,7 @@ function SuccessContent() {
         <div className="w-20 h-20 bg-[#138808]/10 border border-[#138808]/20 text-[#138808] rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 shadow-[0_0_25px_-5px_rgba(19,136,8,0.3)]">
           <CheckCircle2 size={40} />
         </div>
-        <h1 className="text-3xl font-black text-[#1a1a1a] mb-2 relative z-10">Thank You!</h1>
+        <h1 className="text-3xl font-black mb-2 relative z-10 text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]">Thank You!</h1>
         <p className="text-[#4a4a4a] mb-2 relative z-10 leading-relaxed">
           Your pledge has been recorded successfully. Together, we can build a drug-free India.
         </p>

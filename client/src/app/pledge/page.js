@@ -1,7 +1,8 @@
 'use client';
 import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { HeartHandshake, ShieldCheck, Flag } from 'lucide-react';
+import { HeartHandshake, ShieldCheck, Flag, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import { useGetConfigQuery } from '../../redux/api/apiSlice';
 import PledgeForm from '../../components/pledge/PledgeForm';
 import DonationForm from '../../components/pledge/DonationForm';
@@ -23,16 +24,14 @@ function PledgeContent() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center p-4 py-12 relative">
-        {/* Flag gradient background */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
+      <div className="min-h-screen bg-[#FFF9F2] flex items-center justify-center p-4 pt-28 pb-12 relative">
         
         <div className="max-w-xl w-full bg-white rounded-3xl shadow-2xl shadow-[#FF9933]/10 overflow-hidden border border-gray-200 animate-scale-in">
           {/* Header */}
           <div className="bg-gradient-to-br from-[#FF9933] via-[#E6852E] to-[#138808] p-8 text-center text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
             <HeartHandshake className="mx-auto h-16 w-16 mb-4 relative z-10 drop-shadow-md" />
-            <h2 className="text-3xl font-black tracking-tight mb-2 relative z-10">Support the Cause</h2>
+            <h2 className="text-3xl font-black tracking-tight mb-2 relative z-10 text-white drop-shadow-[2px_2px_0_#1a1a1a]">Support the Cause</h2>
             <p className="text-white/80 font-medium relative z-10">Your pledge has been recorded. You can optionally support our on-ground initiatives.</p>
           </div>
           
@@ -56,17 +55,21 @@ function PledgeContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF9F2] py-12 px-4 sm:px-6 lg:px-8 flex justify-center relative">
-      {/* Tricolor top bar */}
-      <div className="fixed top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808] z-50" />
+    <div className="min-h-screen bg-[#FFF9F2] pt-28 pb-12 px-4 sm:px-6 lg:px-8 flex justify-center relative">
       
       <div className="max-w-6xl w-full">
+        <div className="mb-6 animate-fade-in-up">
+          <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-[#4a4a4a] hover:text-[#FF9933] hover:border-[#FF9933]/50 font-bold rounded-xl shadow-sm hover:shadow-md hover:-translate-x-1 transition-all duration-300">
+            <ArrowLeft size={18} />
+            Back
+          </Link>
+        </div>
         <div className="text-center mb-10 animate-fade-in-up">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#FF9933]/20 text-sm font-semibold text-[#1a1a1a] mb-4 shadow-sm">
             <Flag size={14} className="text-[#FF9933]" />
             Independence Day 2026 Special
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-[#1a1a1a] tracking-tight mb-2 sm:mb-3">Take the Pledge</h1>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2 sm:mb-3 text-tricolor drop-shadow-[2px_2px_0_#1a1a1a]">Take a Pledge</h1>
           <p className="text-[#6b7280]">Join the movement and receive your official certificate.</p>
         </div>
         

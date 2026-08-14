@@ -57,7 +57,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
     <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       
       {/* Left Card: The Pledge */}
-      <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-200 overflow-hidden flex flex-col h-full animate-fade-in-up-delay-1">
+      <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-[#FF9933]/15 transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col h-full animate-fade-in-up-delay-1">
         {/* Tricolor top accent */}
         <div className="h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
         
@@ -107,7 +107,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
             </div>
           </div>
           
-          <label className="flex items-start gap-3 cursor-pointer group mt-auto p-4 bg-white border border-gray-200 rounded-xl hover:border-[#FF9933]/40 transition-colors">
+          <label className="flex items-start gap-3 cursor-pointer group mt-auto p-4 bg-white border border-gray-200 rounded-xl hover:border-[#FF9933]/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex h-5 items-center mt-0.5">
               <input
                 required
@@ -125,7 +125,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
       </div>
 
       {/* Right Card: User Details */}
-      <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-200 overflow-hidden flex flex-col h-full animate-fade-in-up-delay-2">
+      <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:shadow-[#138808]/15 transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col h-full animate-fade-in-up-delay-2">
         {/* Tricolor top accent */}
         <div className="h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
         
@@ -189,7 +189,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
             <button
               disabled={isCreating || !formData.consent}
               type="submit"
-              className="w-full flex justify-center py-4 px-4 rounded-xl shadow-[0_0_30px_-5px_rgba(255,153,51,0.4)] text-lg font-bold text-white bg-[#FF9933] hover:bg-[#E6852E] hover:-translate-y-0.5 transition-all outline-none disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed disabled:shadow-none"
+              className="w-full flex justify-center py-4 px-4 rounded-xl shadow-[0_0_30px_-5px_rgba(255,153,51,0.4)] hover:shadow-[0_0_40px_-5px_rgba(255,153,51,0.6)] text-lg font-bold text-white bg-gradient-to-r from-[#FF9933] to-[#E6852E] hover:from-[#E6852E] hover:to-[#D47A29] hover:-translate-y-1 transition-all duration-300 outline-none disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed disabled:shadow-none"
             >
               {isCreating ? 'PROCESSING...' : 'SUBMIT PLEDGE'}
             </button>
