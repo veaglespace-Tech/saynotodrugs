@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  productionBrowserSourceMaps: false,
-  output: 'standalone',
+  /* config options here */
 };
 
 export default nextConfig;
