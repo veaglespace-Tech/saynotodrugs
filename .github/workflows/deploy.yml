@@ -73,10 +73,10 @@ jobs:
 
             echo "Installing frontend dependencies..."
             npm install
-
             echo "Building frontend..."
+            export NODE_OPTIONS="--max_old_space_size=1024"
+            export NEXT_TELEMETRY_DISABLED=1
             npm run build
-
             echo "Restarting frontend..."
             pm2 restart saynotodrugs-client
 
