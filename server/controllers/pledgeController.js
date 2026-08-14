@@ -35,10 +35,17 @@ export const createPledge = asyncHandler(async (req, res) => {
   const campaignExists = await prisma.campaign.findUnique({ where: { id: campaignToUse } });
   
   if (!campaignExists) {
-    const firstActive = await prisma.campaign.findFirst({ where: { status: 'active' } });
+    let firstActive = await prisma.campaign.findFirst({ where: { status: 'active' } });
     if (!firstActive) {
-      res.status(400);
-      throw new Error('No active campaign found. Please contact administrator.');
+      // Auto-create default campaign to prevent blocking the pledge
+      firstActive = await prisma.campaign.create({
+        data: {
+          name: 'Say No to Drugs',
+          description: 'Take the Pledge. Spread Awareness. Build a Drug-Free Society.',
+          donationEnabled: true,
+          status: 'active'
+        }
+      });
     }
     campaignToUse = firstActive.id;
   }
