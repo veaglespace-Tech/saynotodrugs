@@ -50,11 +50,11 @@ export default function VerifyPage({ params }) {
             <div className="bg-[#FAFAFA] p-6 rounded-2xl border border-gray-200 mb-8 relative z-10 text-left space-y-4">
               <div>
                 <p className="text-xs text-[#6b7280] font-bold uppercase tracking-wider mb-1">Pledge Taker</p>
-                <p className="font-bold text-lg text-[#1a1a1a]">{data.data.name}</p>
+                <p className="font-bold text-lg text-[#1a1a1a] truncate">{data.data.name}</p>
               </div>
               <div>
                 <p className="text-xs text-[#6b7280] font-bold uppercase tracking-wider mb-1">Certificate ID</p>
-                <p className="font-mono font-medium text-[#4a4a4a]">{data.data.certificateId}</p>
+                <p className="font-mono font-medium text-[#4a4a4a] break-all">{data.data.certificateId}</p>
               </div>
               <div>
                 <p className="text-xs text-[#6b7280] font-bold uppercase tracking-wider mb-1">Issuance Date</p>
@@ -77,7 +77,7 @@ export default function VerifyPage({ params }) {
             </p>
             
             <div className="bg-red-50 p-6 rounded-2xl border border-red-100 mb-8 relative z-10">
-              <p className="font-mono text-sm text-red-500">{certId}</p>
+              <p className="font-mono text-sm text-red-500 break-all">{certId}</p>
             </div>
           </>
         )}

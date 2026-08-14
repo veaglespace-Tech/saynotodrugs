@@ -15,14 +15,14 @@ export default function Home() {
 
       {/* Navbar */}
       <nav className="fixed top-1.5 w-full z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Veagle Space Logo" className="h-14 w-auto object-contain" />
-            <span className="text-lg font-bold text-[#1a1a1a] tracking-tight">Say No To Drugs</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <img src="/logo.png" alt="Veagle Space Logo" className="h-10 sm:h-14 w-auto object-contain" />
+            <span className="text-base sm:text-lg font-bold text-[#1a1a1a] tracking-tight">Say No To Drugs</span>
           </div>
           <Link
             href="/pledge"
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#FF9933] hover:bg-[#E6852E] text-white font-bold rounded-xl transition-all text-sm shadow-lg shadow-[#FF9933]/20 hover:-translate-y-0.5"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-5 sm:py-2.5 bg-[#FF9933] hover:bg-[#E6852E] text-white font-bold rounded-xl transition-all text-xs sm:text-sm shadow-lg shadow-[#FF9933]/20 hover:-translate-y-0.5 whitespace-nowrap"
           >
             Take Pledge
             <ArrowRight size={16} />
@@ -69,7 +69,7 @@ export default function Home() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="animate-fade-in-up-delay-1 text-5xl md:text-7xl lg:text-8xl font-black text-[#1a1a1a] tracking-tighter mb-6 leading-[1.05]">
+          <h1 className="animate-fade-in-up-delay-1 text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-[#1a1a1a] tracking-tighter mb-6 leading-[1.05]">
             Drug-Free India, <br />
             <span className="text-tricolor-shimmer">
               Our Pledge.
@@ -95,13 +95,13 @@ export default function Home() {
 
           {/* Stats Card */}
           {data?.stats && (
-            <div className="animate-fade-in-up-delay-5 mt-16 mx-auto max-w-2xl glass-card-strong rounded-3xl p-8 shadow-xl relative overflow-hidden">
+            <div className="animate-fade-in-up-delay-5 mt-16 mx-auto max-w-2xl glass-card-strong rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
               {/* Tricolor top border */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
 
-              <div className="grid grid-cols-2 gap-8 divide-x divide-gray-200">
+              <div className="grid grid-cols-2 gap-4 sm:gap-8 divide-x divide-gray-200">
                 <div className="flex flex-col items-center justify-center">
-                  <span className="text-4xl md:text-5xl font-black text-[#FF9933] mb-2">
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FF9933] mb-1 sm:mb-2">
                     {data.stats.totalPledges.toLocaleString()}
                   </span>
                   <span className="text-sm md:text-base font-bold text-[#4a4a4a] uppercase tracking-wider">
@@ -109,10 +109,10 @@ export default function Home() {
                   </span>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <span className="text-4xl md:text-5xl font-black text-[#138808] mb-2">
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#138808] mb-1 sm:mb-2">
                     {data.stats.donorsCount?.toLocaleString() || 0}
                   </span>
-                  <span className="text-sm md:text-base font-bold text-[#4a4a4a] uppercase tracking-wider">
+                  <span className="text-xs sm:text-sm md:text-base font-bold text-[#4a4a4a] uppercase tracking-wider text-center">
                     Total Donors
                   </span>
                 </div>

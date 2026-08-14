@@ -175,8 +175,8 @@ export default function PaymentsPage() {
         
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-            <div className="text-sm text-slate-500">
+          <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-slate-500 text-center sm:text-left">
               Showing <span className="font-semibold text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * itemsPerPage, filteredDonations.length)}</span> of <span className="font-semibold text-slate-900">{filteredDonations.length}</span> results
             </div>
             <div className="flex items-center gap-2">

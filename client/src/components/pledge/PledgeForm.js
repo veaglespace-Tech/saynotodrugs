@@ -74,7 +74,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
               <Languages className="text-[#FF9933] w-5 h-5" />
               <label className="text-sm font-bold text-[#1a1a1a]">Select Pledge Language</label>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {[
                 { id: 'english', label: 'English' },
                 { id: 'hindi', label: 'हिन्दी' },
@@ -84,7 +84,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
                   key={lang.id}
                   type="button"
                   onClick={() => setLanguage(lang.id)}
-                  className={`py-2 rounded-xl font-medium border text-sm transition-all ${
+                  className={`py-1.5 sm:py-2 rounded-xl font-medium border text-xs sm:text-sm transition-all ${
                     language === lang.id 
                     ? 'bg-[#FF9933]/10 border-[#FF9933] text-[#E6852E] shadow-sm' 
                     : 'bg-white border-gray-300 text-[#4a4a4a] hover:border-[#FF9933]/40'

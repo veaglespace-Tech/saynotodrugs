@@ -66,7 +66,7 @@ function PledgeContent() {
             <Flag size={14} className="text-[#FF9933]" />
             Independence Day 2026 Special
           </div>
-          <h1 className="text-4xl font-black text-[#1a1a1a] tracking-tight mb-3">Take the Pledge</h1>
+          <h1 className="text-3xl sm:text-4xl font-black text-[#1a1a1a] tracking-tight mb-2 sm:mb-3">Take the Pledge</h1>
           <p className="text-[#6b7280]">Join the movement and receive your official certificate.</p>
         </div>
         
