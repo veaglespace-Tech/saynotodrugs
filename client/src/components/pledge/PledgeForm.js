@@ -193,11 +193,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
             >
               {isCreating ? 'PROCESSING...' : 'SUBMIT PLEDGE'}
             </button>
-            {!formData.consent && (
-              <p className="text-center text-xs text-[#FF9933] font-medium">
-                * Please read and accept the pledge on the left to continue.
-              </p>
-            )}
+
           </div>
         </div>
       </div>

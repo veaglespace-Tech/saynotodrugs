@@ -66,10 +66,10 @@ export default function AdminLayout({ children }) {
         <div className="h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
         
         <div className="h-24 flex items-center px-8 border-b border-gray-100">
-          <div className="flex items-center gap-3 text-[#1a1a1a]">
-            <img src="/logo.webp" alt="Veagle Space Logo" className="h-16 w-auto object-contain animate-coin-flip" />
-            <span className="text-xl font-bold tracking-tight">Say No to Drugs</span>
-          </div>
+          <Link href="/admin/dashboard" className="flex items-center gap-1.5 cursor-pointer group">
+            <img src="/logo.webp" alt="Say No To Drugs Campaign Logo" className="h-16 w-auto object-contain animate-coin-flip group-hover:scale-105 transition-transform duration-300" />
+            <span className="text-lg font-black tracking-tight text-tricolor drop-shadow-[1.5px_1.5px_0_#1a1a1a] group-hover:opacity-80 transition-opacity duration-300">Say No To Drugs</span>
+          </Link>
         </div>
 
         <div className="flex-1 py-8 px-4 overflow-y-auto space-y-2">
@@ -121,10 +121,10 @@ export default function AdminLayout({ children }) {
         <header className="md:hidden h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 relative">
           {/* Tricolor accent */}
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
-          <div className="flex items-center gap-2 text-[#1a1a1a]">
-            <img src="/logo.webp" alt="Veagle Space Logo" className="h-14 w-auto object-contain animate-coin-flip" />
-            <span className="font-bold tracking-tight">Say No to Drugs</span>
-          </div>
+          <Link href="/admin/dashboard" className="flex items-center gap-1.5 cursor-pointer group">
+            <img src="/logo.webp" alt="Say No To Drugs Campaign Logo" className="h-14 w-auto object-contain animate-coin-flip group-hover:scale-105 transition-transform duration-300" />
+            <span className="text-base font-black tracking-tight text-tricolor drop-shadow-[1.5px_1.5px_0_#1a1a1a] group-hover:opacity-80 transition-opacity duration-300">Say No To Drugs</span>
+          </Link>
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className="text-[#4a4a4a] hover:text-[#1a1a1a] transition-colors p-2"
