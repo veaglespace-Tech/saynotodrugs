@@ -104,7 +104,7 @@ export default function Home() {
                   <span className="text-3xl sm:text-4xl md:text-5xl font-black text-[#FF9933] mb-1 sm:mb-2">
                     {data.stats.totalPledges.toLocaleString()}
                   </span>
-                  <span className="text-sm md:text-base font-bold text-[#4a4a4a] uppercase tracking-wider">
+                  <span className="text-xs sm:text-sm md:text-base font-bold text-[#4a4a4a] uppercase tracking-wider text-center">
                     Total Pledges
                   </span>
                 </div>

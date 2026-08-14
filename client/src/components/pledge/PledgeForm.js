@@ -47,7 +47,8 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
       }
     } catch (error) {
       console.error('Submit Error:', error);
-      alert('Error Status: ' + error?.status + '\nError Data: ' + JSON.stringify(error?.data));
+      const errorMessage = error?.data?.message || 'There was an error processing your pledge. Please try again.';
+      alert(errorMessage);
       setErrorStatus(true);
     }
   };
