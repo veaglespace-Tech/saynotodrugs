@@ -9,7 +9,7 @@ import { generateCertificate } from '../services/certificateService.js';
 // @route   POST /api/pledges/create
 // @access  Public
 export const createPledge = asyncHandler(async (req, res) => {
-  const { name, mobile, email, profession, city, state, campaignId, pledgeText, language = 'english' } = req.body;
+  const { name, mobile, email, profession, organization, city, state, campaignId, pledgeText, language = 'english' } = req.body;
 
   if (!name || !mobile || !email || !campaignId) {
     res.status(400);
@@ -55,7 +55,7 @@ export const createPledge = asyncHandler(async (req, res) => {
 
   if (!user) {
     user = await prisma.user.create({
-      data: { name, mobile, email, profession, city, state }
+      data: { name, mobile, email, profession, organization, city, state }
     });
   } else {
     const existingPledge = await prisma.pledge.findFirst({
@@ -66,6 +66,20 @@ export const createPledge = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error('This email is already registered for this pledge. Please use a different email.');
     }
+
+    // Update user info with new details if they are registering for a new campaign
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (mobile) updateData.mobile = mobile;
+    if (profession) updateData.profession = profession;
+    if (organization) updateData.organization = organization;
+    if (city) updateData.city = city;
+    if (state) updateData.state = state;
+    
+    user = await prisma.user.update({
+      where: { id: user.id },
+      data: updateData
+    });
   }
 
   const pledge = await prisma.pledge.create({

@@ -20,7 +20,8 @@ export default function UsersPage() {
       const matchesSearch = 
         p.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         p.user?.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.user?.city?.toLowerCase().includes(searchTerm.toLowerCase());
+        p.user?.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.user?.organization?.toLowerCase().includes(searchTerm.toLowerCase());
       
       let matchesStatus = true;
       if (statusFilter === 'generated') {
@@ -45,6 +46,54 @@ export default function UsersPage() {
     setCurrentPage(1);
   }, [searchTerm, statusFilter]);
 
+  const exportToCSV = () => {
+    const headers = [
+      'Name',
+      'Mobile',
+      'Email',
+      'Profession',
+      'Organization',
+      'City',
+      'State',
+      'Pledge Date',
+      'Certificate Number',
+      'Certificate Status'
+    ];
+
+    const rows = filteredPledges.map(p => {
+      const cert = p.certificates && p.certificates[0];
+      const certNumber = cert ? cert.certificateNumber : 'N/A';
+      const certStatus = cert ? 'Generated' : 'Pending';
+      return [
+        p.user?.name || '',
+        p.user?.mobile || '',
+        p.user?.email || '',
+        p.user?.profession || '',
+        p.user?.organization || '',
+        p.user?.city || '',
+        p.user?.state || '',
+        new Date(p.pledgeDate).toLocaleDateString('en-GB'),
+        certNumber,
+        certStatus
+      ];
+    });
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `pledges_report_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
@@ -60,7 +109,10 @@ export default function UsersPage() {
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Users & Pledges</h1>
           <p className="text-slate-600 mt-1">Manage and export all campaign participants.</p>
         </div>
-        <button className="flex items-center gap-2 bg-[#FF9933] hover:bg-[#E6852E] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-[#FF9933]/20">
+        <button 
+          onClick={exportToCSV}
+          className="flex items-center gap-2 bg-[#FF9933] hover:bg-[#E6852E] text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-[#FF9933]/20"
+        >
           <Download size={18} />
           <span>Export CSV</span>
         </button>
@@ -105,6 +157,7 @@ export default function UsersPage() {
             <thead className="bg-white">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">User Details</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Organization</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Location</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Date</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Certificate Status</th>
@@ -124,6 +177,10 @@ export default function UsersPage() {
                         <div className="text-sm text-slate-600">{pledge.user?.email}</div>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-slate-900 font-bold">{pledge.user?.organization || '-'}</div>
+                    <div className="text-sm text-slate-600 capitalize">{pledge.user?.profession || '-'}</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-slate-900 font-medium">{pledge.user?.city || '-'}</div>
@@ -180,7 +237,7 @@ export default function UsersPage() {
               ))}
               {paginatedPledges.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-500">
+                  <td colSpan="6" className="px-6 py-12 text-center text-slate-500">
                     No users found matching your search and filters.
                   </td>
                 </tr>

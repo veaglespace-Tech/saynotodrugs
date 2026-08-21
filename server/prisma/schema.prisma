@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String
-  mobile     String
-  email      String   @unique
-  profession String?
-  city       String?
-  state      String?
-  createdAt  DateTime @default(now())
-  pledges    Pledge[]
+  id           Int      @id @default(autoincrement())
+  name         String
+  mobile       String
+  email        String   @unique
+  profession   String?
+  organization String?
+  city         String?
+  state        String?
+  createdAt    DateTime @default(now())
+  pledges      Pledge[]
 
   @@map("users")
 }

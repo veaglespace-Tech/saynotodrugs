@@ -1,7 +1,7 @@
 'use client';
 import { useGetAdminPledgesQuery } from '../../../../redux/api/apiSlice';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, User, Mail, Phone, MapPin, Briefcase, FileText, IndianRupee, Calendar, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, MapPin, Briefcase, Building2, FileText, IndianRupee, Calendar, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function UserDetailPage() {
@@ -62,6 +62,7 @@ export default function UserDetailPage() {
             <DetailRow icon={Mail} label="Email" value={user?.email} />
             <DetailRow icon={Phone} label="Mobile" value={user?.mobile} />
             <DetailRow icon={Briefcase} label="Profession" value={user?.profession || '-'} />
+            <DetailRow icon={Building2} label="Organization" value={user?.organization || '-'} />
             <DetailRow icon={MapPin} label="Location" value={`${user?.city || '-'}, ${user?.state || '-'}`} />
             <DetailRow icon={Calendar} label="Registered" value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'} />
           </div>

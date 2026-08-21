@@ -9,6 +9,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
     mobile: '',
     email: '',
     profession: '',
+    organization: '',
     city: '',
     state: '',
     consent: false
@@ -154,7 +155,7 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
               <input required type="email" name="email" onChange={handleChange} className="w-full rounded-xl bg-[#FAFAFA] border-gray-200 px-4 py-2.5 border focus:bg-white focus:border-[#FF9933] outline-none text-[#1a1a1a] transition-all" placeholder="john@example.com" />
             </div>
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">Profession *</label>
                 <select required name="profession" onChange={handleChange} className="w-full rounded-xl bg-[#FAFAFA] border-gray-200 px-4 py-2.5 border focus:bg-white focus:border-[#FF9933] outline-none text-[#4a4a4a] transition-all">
@@ -167,6 +168,13 @@ export default function PledgeForm({ campaignId, siteConfig, onSuccess }) {
                   <option value="Other" className="bg-white">Other</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">Organization</label>
+                <input type="text" name="organization" onChange={handleChange} className="w-full rounded-xl bg-[#FAFAFA] border-gray-200 px-4 py-2.5 border focus:bg-white focus:border-[#FF9933] outline-none text-[#1a1a1a] transition-all" placeholder="School/College/Company Name" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">City</label>
                 <input type="text" name="city" onChange={handleChange} className="w-full rounded-xl bg-[#FAFAFA] border-gray-200 px-4 py-2.5 border focus:bg-white focus:border-[#FF9933] outline-none text-[#1a1a1a] transition-all" placeholder="Mumbai" />
